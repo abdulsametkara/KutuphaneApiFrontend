@@ -1,0 +1,165 @@
+<!-- Loading Screen -->
+<div *ngIf="isLoading" class="loading-container">
+  <div class="loading-spinner"></div>
+  <p>Dashboard yükleniyor...</p>
+</div>
+
+<!-- Main Dashboard -->
+<div *ngIf="!isLoading" class="dashboard-container">
+
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <h1>📚 Kütüphane Yönetim Sistemi</h1>
+      <p class="welcome-text">
+        Hoş geldiniz, <strong>{{ currentUser?.username || 'Kullanıcı' }}</strong>!
+      </p>
+    </div>
+    <div class="header-right">
+      <span class="user-role">{{ currentUser?.role || 'Kullanıcı' }}</span>
+      <button (click)="refreshStats()" class="refresh-btn" title="İstatistikleri Yenile">
+        🔄 Yenile
+      </button>
+      <button (click)="logout()" class="logout-btn">🚪 Çıkış</button>
+    </div>
+  </header>
+
+  <!-- Success Message -->
+  <div class="success-alert">
+    <div class="alert-icon">✅</div>
+    <div class="alert-text">
+      <strong>Başarılı!</strong> Backend bağlantısı çalışıyor ve dashboard yüklendi.
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <section class="stats-section">
+    <h2>📊 Genel Bakış</h2>
+    <div class="stats-grid">
+      <div class="stat-card books-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalBooks }}</h3>
+          <p>Toplam Kitap</p>
+        </div>
+        <div class="stat-trend">📈</div>
+      </div>
+
+      <div class="stat-card authors-card">
+        <div class="stat-icon">✍️</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalAuthors }}</h3>
+          <p>Toplam Yazar</p>
+        </div>
+        <div class="stat-trend">📈</div>
+      </div>
+
+      <div class="stat-card categories-card">
+        <div class="stat-icon">🏷️</div>
+        <div class="stat-info">
+          <h3>{{ stats.totalCategories }}</h3>
+          <p>Kategori</p>
+        </div>
+        <div class="stat-trend">📈</div>
+      </div>
+
+      <div class="stat-card borrowed-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-info">
+          <h3>{{ stats.borrowedBooks }}</h3>
+          <p>Ödünç Kitap</p>
+        </div>
+        <div class="stat-trend">📊</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation Cards -->
+  <section class="navigation-section">
+    <h2>🧭 Hızlı Erişim</h2>
+    <div class="nav-grid">
+      <div class="nav-card books-nav" (click)="navigateTo('/books')">
+        <div class="nav-icon">📚</div>
+        <h3>Kitap Yönetimi</h3>
+        <p>Kitap ekle, düzenle, sil ve listele</p>
+        <div class="nav-arrow">→</div>
+      </div>
+
+      <div class="nav-card authors-nav" (click)="navigateTo('/authors')">
+        <div class="nav-icon">👨‍💼</div>
+        <h3>Yazar Yönetimi</h3>
+        <p>Yazar bilgilerini yönet</p>
+        <div class="nav-arrow">→</div>
+      </div>
+
+      <div class="nav-card categories-nav" (click)="navigateTo('/categories')">
+        <div class="nav-icon">🗂️</div>
+        <h3>Kategori Yönetimi</h3>
+        <p>Kategori düzenle ve ekle</p>
+        <div class="nav-arrow">→</div>
+      </div>
+
+      <div class="nav-card reports-nav" (click)="navigateTo('/reports')">
+        <div class="nav-icon">📈</div>
+        <h3>Raporlar</h3>
+        <p>İstatistikler ve detaylı raporlar</p>
+        <div class="nav-arrow">→</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Books -->
+  <section class="recent-section">
+    <div class="section-header">
+      <h2>📖 Son Eklenen Kitaplar</h2>
+      <button class="view-all-btn" (click)="navigateTo('/books')">
+        Tümünü Gör →
+      </button>
+    </div>
+
+    <div class="recent-books">
+      <div *ngFor="let book of recentBooks; let i = index"
+           class="book-item"
+           [class.featured]="i === 0">
+        <div class="book-number">{{ i + 1 }}</div>
+        <div class="book-info">
+          <h4>{{ book.title }}</h4>
+          <p class="book-author">
+            <strong>Yazar:</strong> {{ book.author }}
+          </p>
+          <span class="book-category">{{ book.category }}</span>
+        </div>
+        <div class="book-actions">
+          <button class="action-btn view" (click)="navigateTo('/books/' + (i+1))">
+            👁️
+          </button>
+          <button class="action-btn edit" (click)="navigateTo('/books/edit/' + (i+1))">
+            ✏️
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <h2>⚡ Hızlı İşlemler</h2>
+    <div class="action-buttons">
+      <button class="action-btn-large add-book" (click)="navigateTo('/books/add')">
+        <span class="btn-icon">📚</span>
+        <span class="btn-text">Yeni Kitap Ekle</span>
+      </button>
+
+      <button class="action-btn-large add-author" (click)="navigateTo('/authors/add')">
+        <span class="btn-icon">👨‍💼</span>
+        <span class="btn-text">Yeni Yazar Ekle</span>
+      </button>
+
+      <button class="action-btn-large backup" (click)="navigateTo('/backup')">
+        <span class="btn-icon">💾</span>
+        <span class="btn-text">Yedekleme</span>
+      </button>
+    </div>
+  </section>
+
+</div>

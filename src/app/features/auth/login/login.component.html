@@ -1,0 +1,118 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>Kütüphane Yönetim Sistemi</h2>
+      <p class="subtitle">Sisteme giriş yapın</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+      <div class="form-group">
+        <label for="username">Kullanıcı Adı:</label>
+        <div class="input-wrapper">
+          <input id="username"
+                 type="text"
+                 [(ngModel)]="username"
+                 name="username"
+                 placeholder="Kullanıcı adınızı girin"
+                 class="form-control"
+                 required
+                 #usernameInput="ngModel"
+                 autocomplete="username">
+          <span class="input-icon">👤</span>
+        </div>
+        <div *ngIf="usernameInput.invalid && usernameInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          Kullanıcı adı gereklidir
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Şifre:</label>
+        <div class="input-wrapper">
+          <input id="password"
+                 type="password"
+                 [(ngModel)]="password"
+                 name="password"
+                 placeholder="Şifrenizi girin"
+                 class="form-control"
+                 required
+                 #passwordInput="ngModel"
+                 autocomplete="current-password">
+          <span class="input-icon">🔒</span>
+        </div>
+        <div *ngIf="passwordInput.invalid && passwordInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          Şifre gereklidir
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <span class="message-icon">❌</span>
+        <span class="message-text">{{ errorMessage }}</span>
+      </div>
+
+      <div *ngIf="successMessage" class="success-message">
+        <span class="message-icon">✅</span>
+        <span class="message-text">{{ successMessage }}</span>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit"
+                [disabled]="isLoading || !isFormValid()"
+                class="btn-primary">
+          <span *ngIf="isLoading" class="loading-spinner">🔄</span>
+          <span class="btn-text">
+            {{ isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap' }}
+          </span>
+        </button>
+
+        <button type="button"
+                (click)="clearForm()"
+                class="btn-secondary"
+                [disabled]="isLoading">
+          🗑️ Temizle
+        </button>
+      </div>
+    </form>
+
+    <div class="divider">
+      <span class="divider-text">Test Bilgileri</span>
+    </div>
+
+    <div class="test-info">
+      <h4>🧪 Geliştirici Notları</h4>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Backend API:</span>
+          <span class="info-value">https://localhost:7275/api</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Test için:</span>
+          <span class="info-value">Backend'nizde kayıtlı kullanıcı bilgilerini kullanın</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Swagger:</span>
+          <a href="https://localhost:7275/swagger" target="_blank" class="info-link">
+            API Dokümantasyonu →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="register-section">
+      <p class="register-text">
+        Hesabınız yok mu?
+        <a href="#" (click)="$event.preventDefault(); alert('Kayıt sayfası henüz oluşturulmadı')" class="register-link">
+          Kayıt olun
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Background decoration -->
+  <div class="bg-decoration">
+    <div class="decoration-circle circle-1"></div>
+    <div class="decoration-circle circle-2"></div>
+    <div class="decoration-circle circle-3"></div>
+  </div>
+</div>
