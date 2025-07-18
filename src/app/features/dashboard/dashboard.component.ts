@@ -47,13 +47,17 @@ export class DashboardComponent implements OnInit {
   }
 
   loadUserInfo(): void {
-    const token = this.authService.getToken();
-    if (token) {
-      // JWT token'ı decode etmeyi daha sonra ekleyeceğiz
-      this.currentUser = {
-        username: 'Admin Kullanıcı', // Token'dan gelecek
-        role: 'Admin' // Token'dan gelecek
-      };
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+    this.currentUser = {
+      username: currentUser.name,
+      email: currentUser.email,
+      role: currentUser.role
+    };
+    console.log('Giriş yapan kullanıcı:', this.currentUser);
+    } else {
+    // Token yoksa veya geçersizse login'e yönlendir
+    this.router.navigate(['/login']);
     }
   }
 
@@ -65,9 +69,9 @@ export class DashboardComponent implements OnInit {
   }
 
   navigateTo(route: string): void {
-    console.log(`${route} sayfasına yönlendiriliyor...`);
-    alert(`${route} sayfası henüz oluşturulmadı! Sonraki adımda ekleyeceğiz.`);
-    // this.router.navigate([route]);
+
+    
+    this.router.navigate([route]);
   }
 
   // Refresh stats (API'den veri çekme simülasyonu)

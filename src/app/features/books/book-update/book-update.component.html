@@ -1,0 +1,175 @@
+<!-- book-update.component.html -->
+<div class="book-update-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>📚 Kitap Güncelle</h1>
+      <p>Kitap bilgilerini düzenleyebilirsiniz</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="goBack()">
+        ← Geri Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="!isDataLoaded" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Veriler yükleniyor...</p>
+  </div>
+
+  <!-- Main Form -->
+  <div *ngIf="isDataLoaded" class="form-container">
+    
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <div class="alert-icon">✅</div>
+      <div class="alert-content">
+        <strong>Başarılı!</strong> {{ successMessage }}
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <div class="alert-icon">❌</div>
+      <div class="alert-content">
+        <strong>Hata!</strong> {{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- Update Form -->
+    <form (ngSubmit)="onSubmit()" class="book-form">
+      
+      <!-- Basic Information Card -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>📖 Temel Bilgiler</h3>
+        </div>
+        <div class="card-body">
+          
+          <!-- Book Title -->
+          <div class="form-group">
+            <label for="title" class="form-label">
+              <span class="label-text">Kitap Başlığı</span>
+              <span class="required">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="title"
+              name="title"
+              class="form-input"
+              [(ngModel)]="book.title"
+              placeholder="Kitap başlığını giriniz..."
+              required>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description" class="form-label">
+              <span class="label-text">Açıklama</span>
+              <span class="required">*</span>
+            </label>
+            <textarea 
+              id="description"
+              name="description"
+              class="form-textarea"
+              [(ngModel)]="book.description"
+              placeholder="Kitap açıklamasını giriniz..."
+              rows="4"
+              required></textarea>
+          </div>
+
+          <!-- Page Count -->
+          <div class="form-group">
+            <label for="countofPage" class="form-label">
+              <span class="label-text">Sayfa Sayısı</span>
+              <span class="required">*</span>
+            </label>
+            <input 
+              type="number" 
+              id="countofPage"
+              name="countofPage"
+              class="form-input"
+              [(ngModel)]="book.countofPage"
+              placeholder="Sayfa sayısını giriniz..."
+              min="1"
+              required>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Author & Category Selection Card -->
+      <div class="form-card">
+        <div class="card-header">
+          <h3>👨‍💼 Yazar ve Kategori</h3>
+        </div>
+        <div class="card-body">
+          
+          <!-- Author Selection -->
+          <div class="form-group">
+            <label for="authorId" class="form-label">
+              <span class="label-text">Yazar</span>
+              <span class="required">*</span>
+            </label>
+            <select 
+              id="authorId"
+              name="authorId"
+              class="form-select"
+              [(ngModel)]="book.authorId"
+              required>
+              <option value="0">Yazar seçiniz...</option>
+              <option *ngFor="let author of authors" [value]="author.id">
+                {{ author.name }} {{ author.surname }} ({{ author.yearofBirth }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="form-group">
+            <label for="categoryId" class="form-label">
+              <span class="label-text">Kategori</span>
+              <span class="required">*</span>
+            </label>
+            <select 
+              id="categoryId"
+              name="categoryId"
+              class="form-select"
+              [(ngModel)]="book.categoryId"
+              required>
+              <option value="0">Kategori seçiniz...</option>
+              <option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn-secondary"
+          (click)="clearForm()"
+          [disabled]="isSubmitted">
+          🗑️ Temizle
+        </button>
+        
+        <button 
+          type="submit" 
+          class="btn-primary"
+          [disabled]="!isFormValid() || isSubmitted">
+          <span *ngIf="!isSubmitted">💾 Kitabı Güncelle</span>
+          <span *ngIf="isSubmitted">
+            <div class="btn-spinner"></div>
+            Güncelleniyor...
+          </span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

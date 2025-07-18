@@ -1,0 +1,255 @@
+<div class="form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h1>📚 Yeni Kitap Ekle</h1>
+    <p class="subtitle">Kütüphaneye yeni kitap eklemek için formu doldurun</p>
+  </div>
+
+  <!-- Loading Data - ngIf kullanımı -->
+  <div *ngIf="!isDataLoaded" class="loading-section">
+    <div class="loading-spinner">🔄</div>
+    <p>Veriler yükleniyor...</p>
+    
+    <!-- Detaylı loading states - ngIf -->
+    <div class="loading-details">
+      <div *ngIf="authorsLoading" class="loading-item">
+        📝 Yazarlar yükleniyor...
+      </div>
+      <div *ngIf="categoriesLoading" class="loading-item">
+        📂 Kategoriler yükleniyor...
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Form - ngIf ile koşullu gösterim -->
+  <div *ngIf="isDataLoaded" class="form-content">
+    
+    <!-- Success Message - ngIf -->
+    <div *ngIf="successMessage" class="alert success-alert">
+      <span class="alert-icon">✅</span>
+      <span class="alert-text">{{ successMessage }}</span>
+    </div>
+
+    <!-- Error Message - ngIf -->
+    <div *ngIf="errorMessage" class="alert error-alert">
+      <span class="alert-icon">❌</span>
+      <span class="alert-text">{{ errorMessage }}</span>
+    </div>
+
+    <!-- Book Form -->
+    <form (ngSubmit)="onSubmit()" #bookForm="ngForm" class="book-form">
+      
+      <!-- Kitap Adı -->
+      <div class="form-group">
+        <label for="title">Kitap Adı *</label>
+        <input 
+          id="title"
+          type="text"
+          [(ngModel)]="book.title"
+          name="title"
+          placeholder="Kitap adını girin"
+          class="form-control"
+          required
+          #titleInput="ngModel">
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="titleInput.invalid && titleInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          Kitap adı gereklidir
+        </div>
+      </div>
+
+      <!-- Açıklama -->
+      <div class="form-group">
+        <label for="description">Açıklama</label>
+        <textarea 
+          id="description"
+          [(ngModel)]="book.description"
+          name="description"
+          placeholder="Kitap hakkında kısa açıklama (opsiyonel)"
+          class="form-control textarea"
+          rows="3"></textarea>
+      </div>
+
+      <!-- Sayfa Sayısı -->
+      <div class="form-group">
+        <label for="pages">Sayfa Sayısı *</label>
+        <input 
+          id="pages"
+          type="number"
+          [(ngModel)]="book.countofPage"
+          name="pages"
+          placeholder="Sayfa sayısını girin"
+          class="form-control"
+          min="1"
+          required
+          #pagesInput="ngModel">
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="pagesInput.invalid && pagesInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          <span *ngIf="book.countofPage <= 0">Sayfa sayısı 0'dan büyük olmalıdır</span>
+          <span *ngIf="book.countofPage == null">Sayfa sayısı gereklidir</span>
+        </div>
+      </div>
+
+      <!-- Yazar Seçimi - ngFor kullanımı -->
+      <div class="form-group">
+        <label for="author">Yazar *</label>
+        <select 
+          id="author"
+          [(ngModel)]="book.authorId"
+          name="author"
+          class="form-control"
+          required
+          #authorInput="ngModel">
+          
+          <option value="0" disabled>Yazar seçin</option>
+          
+          <!-- ngFor ile yazarları listele -->
+          <option *ngFor="let author of authors; let i = index" 
+                  [value]="author.id">
+            {{ i + 1 }}. {{ author.name }} {{ author.surname }} 
+            ({{ author.yearofBirth }})
+          </option>
+        </select>
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="authorInput.invalid && authorInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          Yazar seçimi gereklidir
+        </div>
+
+        <!-- Authors Count Info - ngIf -->
+        <div *ngIf="authors.length > 0" class="info-text">
+          Toplam {{ authors.length }} yazar mevcut
+        </div>
+      </div>
+
+      <!-- Kategori Seçimi - ngFor kullanımı -->
+      <div class="form-group">
+        <label for="category">Kategori *</label>
+        <select 
+          id="category"
+          [(ngModel)]="book.categoryId"
+          name="category"
+          class="form-control"
+          required
+          #categoryInput="ngModel">
+          
+          <option value="0" disabled>Kategori seçin</option>
+          
+          <!-- ngFor ile kategorileri listele -->
+          <option *ngFor="let category of categories; trackBy: trackByCategory" 
+                  [value]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="categoryInput.invalid && categoryInput.touched" class="field-error">
+          <span class="error-icon">⚠️</span>
+          Kategori seçimi gereklidir
+        </div>
+
+        <!-- Categories List Preview - ngFor ile preview -->
+        <div class="categories-preview">
+          <span class="preview-label">Mevcut kategoriler:</span>
+          <span *ngFor="let category of categories; let last = last"
+                class="category-tag">
+            {{ category.name }}<span *ngIf="!last">, </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Form Debug Info - ngIf (sadece development için) -->
+      <div *ngIf="true" class="debug-section">
+        <h4>🔍 Form Debug Bilgileri</h4>
+        <div class="debug-item">
+          <strong>Form Valid:</strong> 
+          <span [class]="isFormValid() ? 'valid' : 'invalid'">
+            {{ isFormValid() ? '✅ Geçerli' : '❌ Geçersiz' }}
+          </span>
+        </div>
+        <div class="debug-item">
+          <strong>Seçilen Yazar ID:</strong> {{ book.authorId || 'Seçilmedi' }}
+        </div>
+        <div class="debug-item">
+          <strong>Seçilen Kategori ID:</strong> {{ book.categoryId || 'Seçilmedi' }}
+        </div>
+        <div class="debug-item">
+          <strong>Girilen Veriler:</strong>
+          <pre>{{ book | json }}</pre>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="submit"
+          [disabled]="isSubmitting || !isFormValid()"
+          class="btn btn-primary">
+          
+          <!-- Loading state - ngIf -->
+          <span *ngIf="isSubmitting" class="btn-loading">
+            🔄 Kaydediliyor...
+          </span>
+          <span *ngIf="!isSubmitting">
+            💾 Kitabı Kaydet
+          </span>
+        </button>
+
+        <button 
+          type="button"
+          (click)="clearForm()"
+          [disabled]="isSubmitting"
+          class="btn btn-secondary">
+          🗑️ Formu Temizle
+        </button>
+
+        <button 
+          type="button"
+          (click)="goBack()"
+          class="btn btn-outline">
+          ← Geri Dön
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Authors & Categories Summary - ngFor ve ngIf kullanımı -->
+  <div *ngIf="isDataLoaded" class="summary-section">
+    <div class="summary-grid">
+      
+      <!-- Authors Summary -->
+      <div class="summary-card">
+        <h3>👥 Yazarlar ({{ authors.length }})</h3>
+        <div class="summary-list">
+          <div *ngFor="let author of authors.slice(0, 3); let first = first; let last = last"
+               class="summary-item"
+               [class.highlight]="book.authorId === author.id">
+            <span class="author-name">{{ author.name }} {{ author.surname }}</span>
+            <span class="author-year">({{ author.yearofBirth }})</span>
+          </div>
+          
+          <!-- More authors indicator - ngIf -->
+          <div *ngIf="authors.length > 3" class="summary-more">
+            ... ve {{ authors.length - 3 }} yazar daha
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Summary -->
+      <div class="summary-card">
+        <h3>📂 Kategoriler ({{ categories.length }})</h3>
+        <div class="summary-list">
+          <div *ngFor="let category of categories"
+               class="summary-item category-item"
+               [class.highlight]="book.categoryId === category.id">
+            {{ category.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

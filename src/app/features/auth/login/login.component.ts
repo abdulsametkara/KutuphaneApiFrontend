@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'  // styleUrls yerine styleUrl kullanın (Angular 17+)
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
   username = '';
@@ -45,14 +45,14 @@ export class LoginComponent {
         console.log('Backend yanıtı:', response);
 
         if (response && response.isSuccess) {
-          this.successMessage = 'Giriş başarılı! Token alındı.';
-          this.authService.setToken(response.data.token);
+          this.successMessage = 'Giriş başarılı! Yönlendiriliyor...';
+          this.authService.setToken(response.data); // .token kaldırıldı - direkt data
 
-          console.log('Alınan token:', response.data.token);
+          console.log('Alınan token:', response.data);
+          console.log('Dashboard\'a yönlendiriliyor...');
 
-          setTimeout(() => {
-            this.router.navigate(['/dashboard']);
-          }, 1500);
+          // Direk yönlendirme - gecikme yok
+          this.router.navigate(['/dashboard']);
 
         } else {
           this.errorMessage = response.message || 'Giriş başarısız.';
@@ -89,4 +89,10 @@ export class LoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
   }
+
+  // Show register alert - fixes the TypeScript error
+  showRegisterAlert(): void {
+    alert('Kayıt sayfası henüz oluşturulmadı');
+  }
+
 }

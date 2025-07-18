@@ -1,4 +1,4 @@
-/* Global Variables */
+/* Global Variables - Enhanced with distinct colors */
 :root {
   --primary-color: #6366f1;
   --primary-dark: #4f46e5;
@@ -7,6 +7,9 @@
   --warning-color: #f59e0b;
   --danger-color: #ef4444;
   --info-color: #06b6d4;
+  --emerald-color: #059669;
+  --orange-color: #ea580c;
+  --cyan-color: #0891b2;
   --border-radius: 20px;
   --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -51,7 +54,7 @@
   }
 }
 
-/* Header - Refined */
+/* Header - Keep existing style */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -137,7 +140,7 @@
     box-shadow: var(--shadow-medium), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-/* Success Alert - Refined */
+/* Success Alert - Keep existing style */
 .success-alert {
   display: flex;
   align-items: center;
@@ -184,7 +187,7 @@ h2 {
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
 }
 
-/* Stats Grid - Enhanced Shadows */
+/* Enhanced Stats Grid with Distinct Colors - REMOVED WHITE BORDERS */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -192,13 +195,12 @@ h2 {
   margin-bottom: 48px;
 }
 
+/* Base stat card style without white border */
 .stat-card {
-  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   padding: 32px;
   border-radius: 24px;
-  box-shadow: var(--shadow-medium), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   gap: 24px;
@@ -206,43 +208,94 @@ h2 {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: var(--shadow-medium), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
-  .stat-card::before {
+/* Distinct colors for each stat card */
+.books-card {
+  background: rgba(99, 102, 241, 0.2); /* Purple for books */
+}
+
+  .books-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
     border-radius: 0 2px 2px 0;
     box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
   }
 
-  .stat-card::after {
+.authors-card {
+  background: rgba(16, 185, 129, 0.2); /* Green for authors */
+}
+
+  .authors-card::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border-radius: 26px;
-    z-index: -1;
-    opacity: 0;
-    transition: all 0.4s ease;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
   }
 
-  .stat-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-strong), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.18);
+.categories-card {
+  background: rgba(245, 158, 11, 0.2); /* Orange for categories */
+}
+
+  .categories-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #f59e0b, #ea580c);
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
   }
 
-    .stat-card:hover::after {
-      opacity: 1;
-    }
+.borrowed-card {
+  background: rgba(6, 182, 212, 0.2); /* Cyan for borrowed books */
+}
+
+  .borrowed-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-strong), 0 0 30px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.books-card:hover {
+  background: rgba(99, 102, 241, 0.3);
+}
+
+.authors-card:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.categories-card:hover {
+  background: rgba(245, 158, 11, 0.3);
+}
+
+.borrowed-card:hover {
+  background: rgba(6, 182, 212, 0.3);
+}
 
 .stat-icon {
   font-size: 52px;
@@ -272,7 +325,7 @@ h2 {
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
 }
 
-/* Navigation Grid - Enhanced */
+/* Enhanced Navigation Grid with Distinct Colors - REMOVED WHITE BORDERS */
 .nav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -280,55 +333,105 @@ h2 {
   margin-bottom: 48px;
 }
 
+/* Base navigation card style without white border */
 .nav-card {
-  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   padding: 40px;
   border-radius: 28px;
-  box-shadow: var(--shadow-medium), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   text-align: center;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-medium), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
-  .nav-card::before {
+/* Distinct colors for each navigation card */
+.books-nav {
+  background: rgba(139, 92, 246, 0.18); /* Purple gradient for books */
+}
+
+  .books-nav::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
     border-radius: 2px 2px 0 0;
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
   }
 
-  .nav-card::after {
+.authors-nav {
+  background: rgba(34, 197, 94, 0.18); /* Green for authors */
+}
+
+  .authors-nav::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border-radius: 30px;
-    z-index: -1;
-    opacity: 0;
-    transition: all 0.4s ease;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
   }
 
-  .nav-card:hover {
-    transform: translateY(-12px) scale(1.03);
-    box-shadow: var(--shadow-strong), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.18);
+.categories-nav {
+  background: rgba(251, 146, 60, 0.18); /* Orange for categories */
+}
+
+  .categories-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #fb923c, #f97316);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 15px rgba(251, 146, 60, 0.6);
   }
 
-    .nav-card:hover::after {
-      opacity: 1;
-    }
+.reports-nav {
+  background: rgba(14, 165, 233, 0.18); /* Blue for reports */
+}
+
+  .reports-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #0ea5e9, #0284c7);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.6);
+  }
+
+.nav-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: var(--shadow-strong), 0 0 30px rgba(255, 255, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.books-nav:hover {
+  background: rgba(139, 92, 246, 0.25);
+}
+
+.authors-nav:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.categories-nav:hover {
+  background: rgba(251, 146, 60, 0.25);
+}
+
+.reports-nav:hover {
+  background: rgba(14, 165, 233, 0.25);
+}
 
 .nav-icon {
   font-size: 64px;
@@ -371,7 +474,7 @@ h2 {
   transform: translateX(6px);
 }
 
-/* Recent Books - Enhanced */
+/* Recent Books - Enhanced with subtle color distinction - REMOVED WHITE BORDERS */
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -507,7 +610,7 @@ h2 {
     box-shadow: var(--shadow-medium), inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-/* Quick Actions - Enhanced */
+/* Quick Actions - Enhanced with distinct colors - REMOVED WHITE BORDERS */
 .action-buttons {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -515,7 +618,6 @@ h2 {
 }
 
 .action-btn-large {
-  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border: none;
@@ -533,29 +635,35 @@ h2 {
   overflow: hidden;
 }
 
-  .action-btn-large::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border-radius: 26px;
-    z-index: -1;
-    opacity: 0;
-    transition: all 0.4s ease;
-  }
+/* Distinct colors for action buttons */
+.add-book {
+  background: rgba(139, 92, 246, 0.18);
+}
 
-  .action-btn-large:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-strong), 0 0 25px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.18);
-  }
+.add-author {
+  background: rgba(34, 197, 94, 0.18);
+}
 
-    .action-btn-large:hover::after {
-      opacity: 1;
-    }
+.backup {
+  background: rgba(251, 146, 60, 0.18);
+}
+
+.action-btn-large:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-strong), 0 0 25px rgba(255, 255, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.add-book:hover {
+  background: rgba(139, 92, 246, 0.25);
+}
+
+.add-author:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.backup:hover {
+  background: rgba(251, 146, 60, 0.25);
+}
 
 .btn-icon {
   font-size: 48px;

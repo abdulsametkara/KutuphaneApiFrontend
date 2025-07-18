@@ -1,0 +1,86 @@
+<div class="book-list-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>📚 Kitap Yönetimi</h1>
+    <div class="header-actions">
+      <button (click)="addNewBook()" class="btn-primary">
+        ➕ Yeni Kitap Ekle
+      </button>
+      <button (click)="goBack()" class="btn-secondary">
+        ← Dashboard'a Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Kitaplar yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    ❌ {{ errorMessage }}
+    <button (click)="loadBooks()" class="retry-btn">🔄 Tekrar Dene</button>
+  </div>
+
+  <!-- Books List -->
+  <div *ngIf="!isLoading && !errorMessage" class="books-section">
+    
+    <!-- Books Count -->
+    <div class="books-count">
+      <p>Toplam <strong>{{ books.length }}</strong> kitap bulundu</p>
+    </div>
+
+    <!-- No Books -->
+    <div *ngIf="books.length === 0" class="no-books">
+      <div class="no-books-icon">📭</div>
+      <h3>Henüz kitap eklenmemiş</h3>
+      <p>İlk kitabınızı eklemek için "Yeni Kitap Ekle" butonunu kullanın.</p>
+      <button (click)="addNewBook()" class="btn-primary">
+        ➕ İlk Kitabı Ekle
+      </button>
+    </div>
+
+    <!-- Books Grid -->
+    <div *ngIf="books.length > 0" class="books-grid">
+      <div *ngFor="let book of books; let i = index" class="book-card">
+        
+        <!-- Book Number -->
+        <div class="book-number">{{ i + 1 }}</div>
+        
+        <!-- Book Info -->
+        <div class="book-info">
+          <h3 class="book-title">{{ book.title }}</h3>
+          <p class="book-description" *ngIf="book.description">
+            {{ book.description }}
+          </p>
+          <div class="book-details">
+            <span class="detail-item">
+              📄 {{ book.countofPage }} sayfa
+            </span>
+            <span class="detail-item">
+              🆔 Yazar ID: {{ book.authorId }}
+            </span>
+            <span class="detail-item">
+              🏷️ Kategori ID: {{ book.categoryId }}
+            </span>
+          </div>
+          <div class="book-date">
+            📅 {{ book.recordDate | date:'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <!-- Book Actions -->
+        <div class="book-actions">
+          <button (click)="editBook(book.id)" class="action-btn edit-btn">
+            ✏️ Düzenle
+          </button>
+          <button (click)="deleteBook(book.id)" class="action-btn delete-btn">
+            🗑️ Sil
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
