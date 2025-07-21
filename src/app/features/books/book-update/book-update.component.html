@@ -150,23 +150,25 @@
 
       <!-- Form Actions -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn-secondary"
-          (click)="clearForm()"
-          [disabled]="isSubmitted">
-          🗑️ Temizle
-        </button>
+        
         
         <button 
           type="submit" 
-          class="btn-primary"
+          class="btn-secondary"
           [disabled]="!isFormValid() || isSubmitted">
           <span *ngIf="!isSubmitted">💾 Kitabı Güncelle</span>
           <span *ngIf="isSubmitted">
             <div class="btn-spinner"></div>
             Güncelleniyor...
           </span>
+        </button>
+
+        <button 
+          type="button" 
+          class="btn-secondary"
+          (click)="clearForm()"
+          [disabled]="isSubmitted">
+          🗑️ Temizle
         </button>
       </div>
 

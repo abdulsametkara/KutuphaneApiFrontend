@@ -87,8 +87,7 @@
               "RelativeToolTip": "src\\main.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-07-17T12:40:08.576Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:40:08.576Z"
             },
             {
               "$type": "Document",
@@ -100,8 +99,7 @@
               "RelativeToolTip": "src\\app\\app.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-07-17T12:40:01.431Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:40:01.431Z"
             },
             {
               "$type": "Document",
@@ -113,8 +111,7 @@
               "RelativeToolTip": "src\\app\\app.config.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-07-17T12:39:59.201Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:39:59.201Z"
             },
             {
               "$type": "Document",
@@ -126,8 +123,7 @@
               "RelativeToolTip": "src\\app\\features\\dashboard\\dashboard.component.ts",
               "ViewState": "AgIAAEYAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-07-17T12:39:03.826Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:39:03.826Z"
             },
             {
               "$type": "Document",
@@ -139,8 +135,7 @@
               "RelativeToolTip": "src\\app\\features\\auth\\login\\login.component.ts",
               "ViewState": "AgIAAA4AAAAAAAAAAAAAwAsAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2025-07-17T12:32:45.147Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:32:45.147Z"
             },
             {
               "$type": "Document",
@@ -152,8 +147,7 @@
               "RelativeToolTip": "src\\app\\features\\auth\\login\\login.component.html",
               "ViewState": "AgIAAFsAAAAAAAAAAAAAAGkAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-07-17T12:32:44.812Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:32:44.812Z"
             },
             {
               "$type": "Document",
@@ -165,8 +159,7 @@
               "RelativeToolTip": "src\\app\\features\\auth\\login\\login.component.css",
               "ViewState": "AgIAAIgDAAAAAAAAAAAAAJwDAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-07-17T12:32:44.31Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:32:44.31Z"
             },
             {
               "$type": "Document",
@@ -178,8 +171,7 @@
               "RelativeToolTip": "src\\app\\features\\dashboard\\dashboard.component.css",
               "ViewState": "AgIAAAYDAAAAAAAAAAAAACADAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-07-17T12:31:19.112Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-17T12:31:19.112Z"
             }
           ]
         }

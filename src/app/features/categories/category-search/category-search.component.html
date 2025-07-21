@@ -1,0 +1,125 @@
+<div class="category-search-container">
+  <!-- Header -->
+  <div class="search-header">
+    <h1>🔍 Kategori Arama</h1>
+    <button class="btn btn-secondary btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
+  </div>
+
+  <!-- Search Form -->
+  <div class="search-wrapper">
+    <div class="search-form">
+      
+      <!-- Search by Name -->
+      <div class="form-group">
+        <label for="searchName" class="form-label">
+          <i class="fas fa-user"></i> Kategori Adı ile Ara
+        </label>
+        <input 
+          type="text" 
+          id="searchName"
+          name="searchName"
+          [(ngModel)]="searchName"
+          class="form-input"
+          placeholder="Kategori adını giriniz"
+          (keyup.enter)="searchCategories()"
+        />
+      </div>
+
+      <!-- Search by ID -->
+      <div class="form-group">
+        <label for="searchId" class="form-label">
+          <i class="fas fa-hashtag"></i> ID ile Ara
+        </label>
+        <input 
+          type="number" 
+          id="searchId"
+          name="searchId"
+          [(ngModel)]="searchId"
+          class="form-input"
+          placeholder="Kategori ID'sini giriniz"
+          min="1"
+          (keyup.enter)="searchCategories()"
+        />
+      </div>
+
+      <!-- Search Actions -->
+      <div class="search-actions">
+        <button 
+          type="button" 
+          class="btn-secondary"
+          (click)="searchCategories()"
+          [disabled]="isSearching || (!searchName.trim() && !searchId)"
+        >
+          <span *ngIf="isSearching" class="btn-spinner"></span>
+          {{ isSearching ? 'Arıyor...' : '🔍 Ara' }}
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn-secondary"
+          (click)="clearSearch()"
+          [disabled]="isSearching"
+        >
+          🗑️ Temizle
+
+        </button>
+        
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Kategoriler yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+    <button class="btn btn-small btn-primary" (click)="clearSearch()">Temizle</button>
+  </div>
+
+  <!-- Search Results -->
+  <div *ngIf="!isLoading && !errorMessage && categories.length > 0" class="results-section">
+    <div class="results-header">
+      <h3><i class="fas fa-list"></i> Arama Sonuçları ({{ categories.length }} sonuç)</h3>
+    </div>
+
+    <div class="categories-grid">
+      <div *ngFor="let category of categories" class="category-card">
+        <div class="category-info">
+          <h4>{{ category.name }}</h4>
+          <div class="category-details">
+            <p *ngIf="category.description">
+              <i class="fas fa-info-circle"></i>
+              <strong>Açıklama:</strong> {{ category.description }}
+            </p>
+            <p>
+              <i class="fas fa-hashtag"></i>
+              <strong>ID:</strong> {{ category.id }}
+            </p>
+            <p *ngIf="category.recordDate">
+              <i class="fas fa-clock"></i>
+              <strong>Kayıt Tarihi:</strong> {{ category.recordDate | date:'short' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!isLoading && !errorMessage && categories.length === 0 && (searchName || searchId)" class="no-results">
+    <i class="fas fa-search-minus"></i>
+    <h3>Sonuç Bulunamadı</h3>
+    <p>Arama kriterlerinize uygun kategori bulunamadı.</p>
+    <button class="btn btn-primary" (click)="clearSearch()">
+      <i class="fas fa-refresh"></i> Yeni Arama Yap
+    </button>
+  </div>
+</div>  

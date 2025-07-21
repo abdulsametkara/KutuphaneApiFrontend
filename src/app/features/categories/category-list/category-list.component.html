@@ -1,0 +1,65 @@
+<div class="author-list-container"> 
+<!-- Header -->
+  <div class="header">
+    <h1>📚 Kategori Yönetimi</h1>
+    <div class="header-actions">
+      <button (click)="addNewCategory()" class="btn-primary">
+        ➕ Yeni Kategori Ekle
+      </button>
+      <button (click)="searchCategories()" class="btn-thirty">
+        🔍 Kategori Ara
+      </button>
+      <button (click)="goBack()" class="btn-secondary">
+        ← Dashboard'a Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Yazarlar yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+    <button class="btn btn-small" (click)="loadCategories()">Tekrar Dene</button>
+  </div>
+
+  <!-- Categories List -->
+  <div *ngIf="!isLoading && !errorMessage" class="categories-grid">
+    <div *ngIf="categories.length === 0" class="no-data">
+      <i class="fas fa-user-slash"></i>
+      <p>Henüz hiç kategori eklenmemiş.</p>
+      <button class="btn btn-primary" (click)="addNewCategory()">İlk Kategoriyi Ekle</button>
+    </div>
+
+    <div *ngFor="let category of categories" class="category-card">
+      <div class="category-info">
+        <h3>{{ category.name }}</h3>
+        <div class="category-details">
+                    <p *ngIf="category.description">
+            <i class="fas fa-info-circle"></i>
+            <strong>Açıklama:</strong> {{ category.description }}
+          </p>
+
+          <p *ngIf="category.recordDate">
+            <i class="fas fa-clock"></i>
+            <strong>Kayıt Tarihi:</strong> {{ category.recordDate | date:'short' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="category-actions">
+          <button (click)="updateCategory(category)" class="action-btn edit-btn">
+            ✏️ Düzenle
+          </button>
+          <button (click)="deleteCategory(category)" class="action-btn delete-btn">
+            🗑️ Sil
+          </button>
+        </div>
+    </div>
+  </div>
+</div> 

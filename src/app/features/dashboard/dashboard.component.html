@@ -12,7 +12,7 @@
     <div class="header-left">
       <h1>📚 Kütüphane Yönetim Sistemi</h1>
       <p class="welcome-text">
-        Hoş geldiniz, <strong>{{ currentUser?.username || 'Kullanıcı' }}</strong>!
+        Hoş geldiniz, <strong>{{ currentUser?.Username || 'Kullanıcı' }}</strong>!
       </p>
     </div>
     <div class="header-right">
@@ -63,14 +63,7 @@
         <div class="stat-trend">📈</div>
       </div>
 
-      <div class="stat-card borrowed-card">
-        <div class="stat-icon">📝</div>
-        <div class="stat-info">
-          <h3>{{ stats.borrowedBooks }}</h3>
-          <p>Ödünç Kitap</p>
-        </div>
-        <div class="stat-trend">📊</div>
-      </div>
+    
     </div>
   </section>
 
@@ -99,47 +92,11 @@
         <div class="nav-arrow">→</div>
       </div>
 
-      <div class="nav-card reports-nav" (click)="navigateTo('/reports')">
-        <div class="nav-icon">📈</div>
-        <h3>Raporlar</h3>
-        <p>İstatistikler ve detaylı raporlar</p>
-        <div class="nav-arrow">→</div>
-      </div>
+      
     </div>
   </section>
 
-  <!-- Recent Books -->
-  <section class="recent-section">
-    <div class="section-header">
-      <h2>📖 Son Eklenen Kitaplar</h2>
-      <button class="view-all-btn" (click)="navigateTo('/books')">
-        Tümünü Gör →
-      </button>
-    </div>
 
-    <div class="recent-books">
-      <div *ngFor="let book of recentBooks; let i = index"
-           class="book-item"
-           [class.featured]="i === 0">
-        <div class="book-number">{{ i + 1 }}</div>
-        <div class="book-info">
-          <h4>{{ book.title }}</h4>
-          <p class="book-author">
-            <strong>Yazar:</strong> {{ book.author }}
-          </p>
-          <span class="book-category">{{ book.category }}</span>
-        </div>
-        <div class="book-actions">
-          <button class="action-btn view" (click)="navigateTo('/books/' + (i+1))">
-            👁️
-          </button>
-          <button class="action-btn edit" (click)="navigateTo('/books/edit/' + (i+1))">
-            ✏️
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Quick Actions -->
   <section class="quick-actions">
@@ -155,9 +112,9 @@
         <span class="btn-text">Yeni Yazar Ekle</span>
       </button>
 
-      <button class="action-btn-large backup" (click)="navigateTo('/backup')">
-        <span class="btn-icon">💾</span>
-        <span class="btn-text">Yedekleme</span>
+      <button class="action-btn-large add-category" (click)="navigateTo('/categories/add')">
+        <span class="btn-icon">🗂️</span>
+        <span class="btn-text">Yeni Kategori Ekle</span>
       </button>
     </div>
   </section>

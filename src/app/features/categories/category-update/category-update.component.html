@@ -1,0 +1,134 @@
+<div class="category-update-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h2><i class="fas fa-edit"></i> Kategori Güncelle</h2>
+    <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Kategori bilgileri yükleniyor...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="isDataLoaded" class="form-wrapper">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="fas fa-check-circle"></i>
+      {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <form (ngSubmit)="onSubmit()" #categoryForm="ngForm">
+        <!-- Hidden ID Field -->
+        <input type="hidden" [(ngModel)]="category.id" name="id" />
+
+        <!-- Category Info Display -->
+        <div class="category-info">
+          <div class="info-item">
+            <label class="info-label">ID</label>
+            <span class="info-value">{{ category.id }}</span>
+          </div>
+        </div>
+
+        <!-- Name Field -->
+        <div class="form-group">
+          <label for="name" class="form-label">
+            <span class="label-text">Ad</span>
+            <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="name"
+            name="name"
+            [(ngModel)]="category.name" 
+            #nameField="ngModel"
+            required 
+            minlength="2"
+            maxlength="50"
+            class="form-input"
+            placeholder="Kategori adını giriniz"
+            [class.invalid]="nameField.invalid && nameField.touched"
+          />
+          <div *ngIf="nameField.invalid && nameField.touched" class="field-error">
+            <span *ngIf="nameField.errors?.['required']">Ad alanı zorunludur</span>
+            <span *ngIf="nameField.errors?.['minlength']">Ad en az 2 karakter olmalıdır</span>
+          </div>
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group">
+          <label for="description" class="form-label">
+            <span class="label-text">Açıklama</span>
+            <span class="required">*</span>
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            [(ngModel)]="category.description"
+            #descriptionField="ngModel"
+            required
+            minlength="2"
+            maxlength="200"
+            class="form-textarea"
+            placeholder="Kategori açıklamasını giriniz"
+            rows="4"
+            [class.invalid]="descriptionField.invalid && descriptionField.touched"
+          ></textarea>
+          <div *ngIf="descriptionField.invalid && descriptionField.touched" class="field-error">
+            <span *ngIf="descriptionField.errors?.['required']">Açıklama alanı zorunludur</span>
+            <span *ngIf="descriptionField.errors?.['minlength']">Açıklama en az 2 karakter olmalıdır</span>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="!categoryForm.valid || isSubmitted"
+          >
+            <span *ngIf="!isSubmitted">
+              <i class="fas fa-save"></i>
+              Kategoriyi Güncelle
+            </span>
+            <span *ngIf="isSubmitted" class="btn-loading">
+              <div class="btn-spinner"></div>
+              Güncelleniyor...
+            </span>
+          </button>
+          
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            (click)="clearForm()"
+            [disabled]="isSubmitted"
+          >
+            <i class="fas fa-eraser"></i>
+            Temizle
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !isDataLoaded && errorMessage" class="error-state">
+    <i class="fas fa-exclamation-triangle"></i>
+    <h3>Kategori bulunamadı</h3>
+    <p>{{ errorMessage }}</p>
+    <button class="btn btn-primary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Kategori Listesine Dön
+    </button>
+  </div>
+</div>

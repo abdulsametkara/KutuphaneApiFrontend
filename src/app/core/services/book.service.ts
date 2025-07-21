@@ -18,8 +18,8 @@ export class BookService {
         return this.http.get(`${this.apiUrl}/Book/ListAll`);
     }
     
-    getBookById(id: number): Observable<any> {  
-        return this.http.get(`${this.apiUrl}/Book/GetById?id=${id}`);
+    getBookById(id: number): Observable<BookUpdateDto> {  
+        return this.http.get<BookUpdateDto>(`${this.apiUrl}/Book/GetById?id=${id}`);
     }
     
     createBook(book: BookCreateDto): Observable<any> {
@@ -40,9 +40,5 @@ export class BookService {
 
     getBooksByAuthor(authorId: number): Observable<any> {
         return this.http.get(`${this.apiUrl}/Book/GetBooksByAuthorId?authorId=${authorId}`);
-    }
-
-    getBooksByTitle(title: string): Observable<any> {
-        return this.http.get(`${this.apiUrl}/Book/GetBooksByTitle?title=${title}`);
     }
 }

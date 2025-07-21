@@ -25,7 +25,7 @@ export class LoginComponent {
 
   onSubmit(): void {
     if (!this.username || !this.password) {
-      this.errorMessage = 'Kullanıcı adı ve şifre gereklidir.';
+      this.errorMessage ;
       return;
     }
 
@@ -38,29 +38,20 @@ export class LoginComponent {
       password: this.password
     };
 
-    console.log('Giriş denemesi:', credentials);
-
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Backend yanıtı:', response);
-
         if (response && response.isSuccess) {
-          this.successMessage = 'Giriş başarılı! Yönlendiriliyor...';
-          this.authService.setToken(response.data); // .token kaldırıldı - direkt data
-
-          console.log('Alınan token:', response.data);
-          console.log('Dashboard\'a yönlendiriliyor...');
-
-          // Direk yönlendirme - gecikme yok
+          this.successMessage = response.message;
+          this.authService.setToken(response.data);
           this.router.navigate(['/dashboard']);
 
         } else {
-          this.errorMessage = response.message || 'Giriş başarısız.';
+          this.errorMessage = response.message;
         }
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Giriş hatası:', error);
+
 
         if (error.status === 0) {
           this.errorMessage = 'Backend\'e bağlanılamıyor. Backend çalışıyor mu?';
@@ -77,12 +68,10 @@ export class LoginComponent {
     });
   }
 
-  // Form validation helper
   isFormValid(): boolean {
     return this.username.length > 0 && this.password.length > 0;
   }
 
-  // Clear form
   clearForm(): void {
     this.username = '';
     this.password = '';
@@ -90,7 +79,6 @@ export class LoginComponent {
     this.successMessage = '';
   }
 
-  // Show register alert - fixes the TypeScript error
   showRegisterAlert(): void {
     alert('Kayıt sayfası henüz oluşturulmadı');
   }

@@ -1,0 +1,146 @@
+<!-- book-search.component.html -->
+<div class="search-container">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>🔍 Kitap Arama</h1>
+      <p>Yazar, kategori veya başlık ile kitap arayabilirsiniz</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-secondary" (click)="goBack()">
+        ← Geri Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Search Form -->
+  <div class="search-form-container">
+    <form (ngSubmit)="searchBooks()" class="search-form">
+      
+      <!-- Search Options -->
+      <div class="search-options">
+
+
+        <!-- Author Search -->
+        <div class="search-group">
+          <label class="search-label">
+            👨‍💼 Yazar
+          </label>
+          <select 
+            class="search-select"
+            [(ngModel)]="selectedAuthorId"
+            name="selectedAuthorId"
+            [disabled]="searchTitle.trim() || selectedCategoryId > 0">
+            <option value="0">Yazar seçiniz...</option>
+            <option *ngFor="let author of authors" [value]="author.id">
+              {{ author.name }} {{ author.surname }} ({{ author.yearofBirth }})
+            </option>
+          </select>
+          <small class="search-hint">API endpoint: GetBooksByAuthorId</small>
+        </div>
+
+        <!-- Category Search -->
+        <div class="search-group">
+          <label class="search-label">
+            🏷️ Kategori
+          </label>
+          <select 
+            class="search-select"
+            [(ngModel)]="selectedCategoryId"
+            name="selectedCategoryId"
+            [disabled]="searchTitle.trim() || selectedAuthorId > 0">
+            <option value="0">Kategori seçiniz...</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+              <span *ngIf="category.description"> - {{ category.description }}</span>
+            </option>
+          </select>
+          <small class="search-hint">API endpoint: GetBooksByCategoryId</small>
+        </div>
+
+      </div>
+
+      <!-- Search Actions -->
+      <div class="search-actions">
+        <button 
+          type="submit"
+          class="btn-secondary"
+          [disabled]="isSearching || (!searchTitle.trim() && selectedAuthorId === 0 && selectedCategoryId === 0)">
+          <span *ngIf="!isSearching">🔍 Ara</span>
+          <span *ngIf="isSearching">
+            <div class="btn-spinner"></div>
+            Aranıyor...
+          </span>
+        </button>
+
+         <button 
+          type="button"
+          class="btn-secondary"
+          (click)="clearSearch()"
+          [disabled]="isSearching">
+          🗑️ Temizle
+        </button>
+      </div>
+      
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Filtreler yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <div class="error-icon">❌</div>
+    <div class="error-text">{{ errorMessage }}</div>
+  </div>
+
+  <!-- Search Results -->
+  <div *ngIf="books.length > 0" class="results-section">
+    
+    <!-- Results Header -->
+  <div *ngIf="!isLoading && !errorMessage && categories.length > 0" class="results-section">
+    <div class="results-header">
+      <h3><i class="fas fa-list"></i> Arama Sonuçları ({{ categories.length }} sonuç)</h3>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="results-grid">
+      <div *ngFor="let book of books; let i = index" class="result-card">
+        
+        <!-- Book Number -->
+        <div class="book-number">{{ i + 1 }}</div>
+        
+        <!-- Book Info -->
+        <div class="book-info">
+          <h4 class="book-title">{{ book.title }}</h4>
+          <p class="book-description" *ngIf="book.description">
+            {{ book.description }}
+          </p>
+          <div class="book-details">
+            <span class="detail-item">
+              📄 {{ book.countofPage }} sayfa
+            </span>
+            <span class="detail-item">
+              🆔 Yazar ID: {{ book.authorId }}
+            </span>
+            <span class="detail-item">
+              🏷️ Kategori ID: {{ book.categoryId }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!isSearching && !isLoading && books.length === 0 && !errorMessage" class="no-results">
+    <div class="no-results-icon">🔍</div>
+    <h3>Arama yapın</h3>
+    <p>Kitap aramak için yukarıdaki filtreleri kullanın.</p>
+  </div>
+
+</div>

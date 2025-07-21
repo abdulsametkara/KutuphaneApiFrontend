@@ -1,0 +1,151 @@
+<div class="author-form-container">
+  <!-- Header -->
+  <div class="form-header">
+    <h2><i class="fas fa-user-plus"></i> Yeni Yazar Ekle</h2>
+    <button class="btn btn-secondary btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!isLoading" class="form-wrapper">
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      <i class="fas fa-check-circle"></i>
+      {{ successMessage }}
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #authorForm="ngForm" class="author-form">
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name" class="form-label">
+          <i class="fas fa-user"></i> Ad *
+        </label>
+        <input 
+          type="text" 
+          id="name"
+          name="name"
+          [(ngModel)]="author.name" 
+          #nameField="ngModel"
+          required 
+          minlength="2"
+          maxlength="50"
+          class="form-input"
+          placeholder="Yazarın adını giriniz"
+          [class.invalid]="nameField.invalid && nameField.touched"
+        />
+        <div *ngIf="nameField.invalid && nameField.touched" class="field-error">
+          <span *ngIf="nameField.errors?.['required']">Ad alanı zorunludur</span>
+          <span *ngIf="nameField.errors?.['minlength']">Ad en az 2 karakter olmalıdır</span>
+          <span *ngIf="nameField.errors?.['maxlength']">Ad en fazla 50 karakter olmalıdır</span>
+        </div>
+      </div>
+
+      <!-- Surname Field -->
+      <div class="form-group">
+        <label for="surname" class="form-label">
+          <i class="fas fa-user"></i> Soyad *
+        </label>
+        <input 
+          type="text" 
+          id="surname"
+          name="surname"
+          [(ngModel)]="author.surname" 
+          #surnameField="ngModel"
+          required 
+          minlength="2"
+          maxlength="50"
+          class="form-input"
+          placeholder="Yazarın soyadını giriniz"
+          [class.invalid]="surnameField.invalid && surnameField.touched"
+        />
+        <div *ngIf="surnameField.invalid && surnameField.touched" class="field-error">
+          <span *ngIf="surnameField.errors?.['required']">Soyad alanı zorunludur</span>
+          <span *ngIf="surnameField.errors?.['minlength']">Soyad en az 2 karakter olmalıdır</span>
+          <span *ngIf="surnameField.errors?.['maxlength']">Soyad en fazla 50 karakter olmalıdır</span>
+        </div>
+      </div>
+
+      <!-- Place of Birth Field -->
+      <div class="form-group">
+        <label for="placeofBirth" class="form-label">
+          <i class="fas fa-map-marker-alt"></i> Doğum Yeri
+        </label>
+        <input 
+          type="text" 
+          id="placeofBirth"
+          name="placeofBirth"
+          [(ngModel)]="author.placeofBirth" 
+          #placeField="ngModel"
+          maxlength="100"
+          class="form-input"
+          placeholder="Doğum yerini giriniz"
+          [class.invalid]="placeField.invalid && placeField.touched"
+        />
+        <div *ngIf="placeField.invalid && placeField.touched" class="field-error">
+          <span *ngIf="placeField.errors?.['maxlength']">Doğum yeri en fazla 100 karakter olmalıdır</span>
+        </div>
+      </div>
+
+      <!-- Year of Birth Field -->
+      <div class="form-group">
+        <label for="yearofBirth" class="form-label">
+          <i class="fas fa-calendar-alt"></i> Doğum Yılı *
+        </label>
+        <input 
+          type="number" 
+          id="yearofBirth"
+          name="yearofBirth"
+          [(ngModel)]="author.yearofBirth" 
+          #yearField="ngModel"
+          required 
+          min="1800"
+          max="2025"
+          class="form-input"
+          placeholder="Doğum yılını giriniz"
+          [class.invalid]="yearField.invalid && yearField.touched"
+        />
+        <div *ngIf="yearField.invalid && yearField.touched" class="field-error">
+          <span *ngIf="yearField.errors?.['required']">Doğum yılı zorunludur</span>
+          <span *ngIf="yearField.errors?.['min']">Doğum yılı 1800'den küçük olamaz</span>
+          <span *ngIf="yearField.errors?.['max']">Doğum yılı 2025'den büyük olamaz</span>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-secondary"
+          [disabled]="!authorForm.valid || isSubmitting"
+        >
+          <span *ngIf="isSubmitting" class="btn-spinner"></span>
+
+          {{ isSubmitting ? 'Kaydediliyor...' : '💾 Yazarı Kaydet' }}
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-secondary"
+          (click)="clearForm()"
+          [disabled]="isSubmitting"
+        >
+           🗑️ Formu Temizle
+        </button>
+        
+      </div>
+    </form>
+  </div>
+</div>

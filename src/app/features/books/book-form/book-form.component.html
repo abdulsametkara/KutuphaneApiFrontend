@@ -54,7 +54,6 @@
         
         <!-- Field Error - ngIf ile validation -->
         <div *ngIf="titleInput.invalid && titleInput.touched" class="field-error">
-          <span class="error-icon">⚠️</span>
           Kitap adı gereklidir
         </div>
       </div>
@@ -87,7 +86,6 @@
         
         <!-- Field Error - ngIf ile validation -->
         <div *ngIf="pagesInput.invalid && pagesInput.touched" class="field-error">
-          <span class="error-icon">⚠️</span>
           <span *ngIf="book.countofPage <= 0">Sayfa sayısı 0'dan büyük olmalıdır</span>
           <span *ngIf="book.countofPage == null">Sayfa sayısı gereklidir</span>
         </div>
@@ -116,7 +114,6 @@
         
         <!-- Field Error - ngIf ile validation -->
         <div *ngIf="authorInput.invalid && authorInput.touched" class="field-error">
-          <span class="error-icon">⚠️</span>
           Yazar seçimi gereklidir
         </div>
 
@@ -148,38 +145,7 @@
         
         <!-- Field Error - ngIf ile validation -->
         <div *ngIf="categoryInput.invalid && categoryInput.touched" class="field-error">
-          <span class="error-icon">⚠️</span>
           Kategori seçimi gereklidir
-        </div>
-
-        <!-- Categories List Preview - ngFor ile preview -->
-        <div class="categories-preview">
-          <span class="preview-label">Mevcut kategoriler:</span>
-          <span *ngFor="let category of categories; let last = last"
-                class="category-tag">
-            {{ category.name }}<span *ngIf="!last">, </span>
-          </span>
-        </div>
-      </div>
-
-      <!-- Form Debug Info - ngIf (sadece development için) -->
-      <div *ngIf="true" class="debug-section">
-        <h4>🔍 Form Debug Bilgileri</h4>
-        <div class="debug-item">
-          <strong>Form Valid:</strong> 
-          <span [class]="isFormValid() ? 'valid' : 'invalid'">
-            {{ isFormValid() ? '✅ Geçerli' : '❌ Geçersiz' }}
-          </span>
-        </div>
-        <div class="debug-item">
-          <strong>Seçilen Yazar ID:</strong> {{ book.authorId || 'Seçilmedi' }}
-        </div>
-        <div class="debug-item">
-          <strong>Seçilen Kategori ID:</strong> {{ book.categoryId || 'Seçilmedi' }}
-        </div>
-        <div class="debug-item">
-          <strong>Girilen Veriler:</strong>
-          <pre>{{ book | json }}</pre>
         </div>
       </div>
 
@@ -188,7 +154,7 @@
         <button 
           type="submit"
           [disabled]="isSubmitting || !isFormValid()"
-          class="btn btn-primary">
+          class="btn btn-secondary">
           
           <!-- Loading state - ngIf -->
           <span *ngIf="isSubmitting" class="btn-loading">
@@ -217,39 +183,5 @@
     </form>
   </div>
 
-  <!-- Authors & Categories Summary - ngFor ve ngIf kullanımı -->
-  <div *ngIf="isDataLoaded" class="summary-section">
-    <div class="summary-grid">
-      
-      <!-- Authors Summary -->
-      <div class="summary-card">
-        <h3>👥 Yazarlar ({{ authors.length }})</h3>
-        <div class="summary-list">
-          <div *ngFor="let author of authors.slice(0, 3); let first = first; let last = last"
-               class="summary-item"
-               [class.highlight]="book.authorId === author.id">
-            <span class="author-name">{{ author.name }} {{ author.surname }}</span>
-            <span class="author-year">({{ author.yearofBirth }})</span>
-          </div>
-          
-          <!-- More authors indicator - ngIf -->
-          <div *ngIf="authors.length > 3" class="summary-more">
-            ... ve {{ authors.length - 3 }} yazar daha
-          </div>
-        </div>
-      </div>
-
-      <!-- Categories Summary -->
-      <div class="summary-card">
-        <h3>📂 Kategoriler ({{ categories.length }})</h3>
-        <div class="summary-list">
-          <div *ngFor="let category of categories"
-               class="summary-item category-item"
-               [class.highlight]="book.categoryId === category.id">
-            {{ category.name }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  
 </div> 

@@ -1,0 +1,130 @@
+<div class="author-search-container">
+  <!-- Header -->
+  <div class="search-header">
+    <h2><i class="fas fa-search"></i> Yazar Arama</h2>
+    <button class="btn btn-secondary btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
+  </div>
+
+  <!-- Search Form -->
+  <div class="search-wrapper">
+    <div class="search-form">
+      <h3><i class="fas fa-filter"></i> Arama Kriterleri</h3>
+      
+      <!-- Search by Name -->
+      <div class="form-group">
+        <label for="searchName" class="form-label">
+          <i class="fas fa-user"></i> Yazar Adı ile Ara
+        </label>
+        <input 
+          type="text" 
+          id="searchName"
+          name="searchName"
+          [(ngModel)]="searchName"
+          class="form-input"
+          placeholder="Yazar adını giriniz"
+          (keyup.enter)="searchAuthors()"
+        />
+      </div>
+
+      <!-- Search by ID -->
+      <div class="form-group">
+        <label for="searchId" class="form-label">
+          <i class="fas fa-hashtag"></i> ID ile Ara
+        </label>
+        <input 
+          type="number" 
+          id="searchId"
+          name="searchId"
+          [(ngModel)]="searchId"
+          class="form-input"
+          placeholder="Yazar ID'sini giriniz"
+          min="1"
+          (keyup.enter)="searchAuthors()"
+        />
+      </div>
+
+      <!-- Search Actions -->
+      <div class="search-actions">
+        <button 
+          type="button" 
+          class="btn btn-primary search-btn"
+          (click)="searchAuthors()"
+          [disabled]="isSearching || (!searchName.trim() && !searchId)"
+        >
+          <span *ngIf="isSearching" class="btn-spinner"></span>
+          <i *ngIf="!isSearching" class="fas fa-search"></i>
+          {{ isSearching ? 'Arıyor...' : 'Ara' }}
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-warning"
+          (click)="clearSearch()"
+          [disabled]="isSearching"
+        >
+          <i class="fas fa-eraser"></i> Temizle
+        </button>
+        
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Yazarlar yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage && !isLoading" class="alert alert-error">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+    <button class="btn btn-small btn-primary" (click)="clearSearch()">Temizle</button>
+  </div>
+
+  <!-- Search Results -->
+  <div *ngIf="!isLoading && !errorMessage && authors.length > 0" class="results-section">
+    <div class="results-header">
+      <h3><i class="fas fa-list"></i> Arama Sonuçları ({{ authors.length }} sonuç)</h3>
+    </div>
+
+    <div class="authors-grid">
+      <div *ngFor="let author of authors" class="author-card">
+        <div class="author-info">
+          <h4>{{ author.name }} {{ author.surname }}</h4>
+          <div class="author-details">
+            <p *ngIf="author.placeofBirth">
+              <i class="fas fa-map-marker-alt"></i>
+              <strong>Doğum Yeri:</strong> {{ author.placeofBirth }}
+            </p>
+            <p>
+              <i class="fas fa-calendar-alt"></i>
+              <strong>Doğum Yılı:</strong> {{ author.yearofBirth }}
+            </p>
+            <p>
+              <i class="fas fa-hashtag"></i>
+              <strong>ID:</strong> {{ author.id }}
+            </p>
+            <p *ngIf="author.recordDate">
+              <i class="fas fa-clock"></i>
+              <strong>Kayıt Tarihi:</strong> {{ author.recordDate | date:'short' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!isLoading && !errorMessage && authors.length === 0 && (searchName || searchId)" class="no-results">
+    <i class="fas fa-search-minus"></i>
+    <h3>Sonuç Bulunamadı</h3>
+    <p>Arama kriterlerinize uygun yazar bulunamadı.</p>
+    <button class="btn btn-primary" (click)="clearSearch()">
+      <i class="fas fa-refresh"></i> Yeni Arama Yap
+    </button>
+  </div>
+</div>  

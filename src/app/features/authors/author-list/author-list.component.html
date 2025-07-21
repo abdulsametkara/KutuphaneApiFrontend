@@ -1,0 +1,67 @@
+<div class="author-list-container"> 
+  <div class="header">
+    <h1>📚 Yazar Yönetimi</h1>
+    <div class="header-actions">
+      <button (click)="addNewAuthor()" class="btn-primary">
+        ➕ Yeni Yazar Ekle
+      </button>
+      <button (click)="searchAuthors()" class="btn-thirty">
+        🔍 Yazar Ara
+      </button>
+      <button (click)="goBack()" class="btn-secondary">
+        ← Dashboard'a Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Yazarlar yükleniyor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+    <button class="btn btn-small" (click)="loadAuthors()">Tekrar Dene</button>
+  </div>
+
+  <!-- Authors List -->
+  <div *ngIf="!isLoading && !errorMessage" class="authors-grid">
+    <div *ngIf="authors.length === 0" class="no-data">
+      <i class="fas fa-user-slash"></i>
+      <p>Henüz hiç yazar eklenmemiş.</p>
+      <button class="btn btn-primary" (click)="addNewAuthor()">İlk Yazarı Ekle</button>
+    </div>
+
+    <div *ngFor="let author of authors" class="author-card">
+      <div class="author-info">
+        <h3>{{ author.name }} {{ author.surname }}</h3>
+        <div class="author-details">
+          <p *ngIf="author.placeofBirth">
+            <i class="fas fa-map-marker-alt"></i>
+            <strong>Doğum Yeri:</strong> {{ author.placeofBirth }}
+          </p>
+          <p>
+            <i class="fas fa-calendar-alt"></i>
+            <strong>Doğum Yılı:</strong> {{ author.yearofBirth }}
+          </p>
+          <p *ngIf="author.recordDate">
+            <i class="fas fa-clock"></i>
+            <strong>Kayıt Tarihi:</strong> {{ author.recordDate | date:'short' }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="book-actions">
+          <button (click)="updateAuthor(author)" class="action-btn edit-btn">
+            ✏️ Düzenle
+          </button>
+          <button (click)="deleteAuthor(author)" class="action-btn delete-btn">
+            🗑️ Sil
+          </button>
+        </div>
+    </div>
+  </div>
+</div> 

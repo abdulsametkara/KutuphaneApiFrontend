@@ -25,7 +25,7 @@ export class AuthorService {
 
   // ID ile yazar getir
   getAuthorById(id: number): Observable<ApiResponse<Author>> {
-    return this.http.get<ApiResponse<Author>>(`${this.apiUrl}/Author/GetById/${id}`);
+    return this.http.get<ApiResponse<Author>>(`${this.apiUrl}/Author/GetById?id=${id}`);
   }
 
   // Yeni yazar oluştur
@@ -40,6 +40,10 @@ export class AuthorService {
 
   // Yazar sil
   deleteAuthor(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/Author/Delete/${id}`);
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/Author/Delete?id=${id}`);
+  }
+
+  getAuthorByName(name: string): Observable<ApiResponse<Author[]>> {
+    return this.http.get<ApiResponse<Author[]>>(`${this.apiUrl}/Author/GetByName?name=${name}`);
   }
 } 

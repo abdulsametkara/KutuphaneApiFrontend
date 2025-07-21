@@ -45,6 +45,6 @@ export class CategoryService {
 
   // Kategori adı ile arama
   getCategoriesByName(name: string): Observable<ApiResponse<Category[]>> {
-    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/GetCategoriesByName?name=${name}`);
+    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/GetByName/${name}`);
   }
 } 
