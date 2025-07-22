@@ -2,7 +2,7 @@
   <div class="header">
     <h1>📚 Yazar Yönetimi</h1>
     <div class="header-actions">
-      <button (click)="addNewAuthor()" class="btn-primary">
+      <button *ngIf="authService.canCreate()" (click)="addNewAuthor()" class="btn-primary">
         ➕ Yeni Yazar Ekle
       </button>
       <button (click)="searchAuthors()" class="btn-thirty">
@@ -55,10 +55,10 @@
       </div>
       
       <div class="book-actions">
-          <button (click)="updateAuthor(author)" class="action-btn edit-btn">
+          <button *ngIf="authService.canEdit()" (click)="updateAuthor(author)" class="action-btn edit-btn">
             ✏️ Düzenle
           </button>
-          <button (click)="deleteAuthor(author)" class="action-btn delete-btn">
+          <button *ngIf="authService.canDelete()" (click)="deleteAuthor(author)" class="action-btn delete-btn">
             🗑️ Sil
           </button>
         </div>

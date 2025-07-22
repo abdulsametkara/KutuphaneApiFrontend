@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
 
@@ -25,9 +26,7 @@ export class CategoryList {
   isLoading = true;
   errorMessage = '';
 
-  constructor(private categoryService: CategoryService, private router: Router) { 
-
-  }
+  constructor(private categoryService: CategoryService, private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -58,7 +57,7 @@ export class CategoryList {
       this.categoryService.deleteCategory(category.id).subscribe({
         next: (response: ApiResponse<any>) => {
           if (response && response.isSuccess) {
-            // Kategori listesinden kaldır
+
             this.categories = this.categories.filter(c => c.id !== category.id);
           } else {
             this.errorMessage = response.message;

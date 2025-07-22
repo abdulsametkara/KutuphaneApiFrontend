@@ -52,17 +52,24 @@ export class AuthService {
   }
 
   getCurrentUser(): any {
-    const decodedToken = this.getDecodedToken();
-    if (decodedToken) {
-      return {
-        id: decodedToken.sid,
-        name: decodedToken.name,
-        email: decodedToken.email,
-        role: decodedToken.role
-      };
-    }
-    return null;
+  const token = this.getToken();
+  console.log('🎫 Raw token:', token);
+  
+  const decodedToken = this.getDecodedToken();
+  console.log('🔍 Decoded token:', decodedToken);
+  
+  if (decodedToken) {
+    const user = {
+      id: decodedToken.sid,
+      name: decodedToken.name,
+      email: decodedToken.email,  
+      role: decodedToken.role
+    };
+
+    return user;
   }
+  return null;
+}
 
   isAuthenticated(): boolean {
     const token = this.getToken();
@@ -74,6 +81,31 @@ export class AuthService {
     const currentTime = Date.now() / 1000;
     return decodedToken.exp > currentTime;
   }
+
+  canCreate(): boolean {
+  const user = this.getCurrentUser();
+  return user?.role === 'Admin';
+}
+
+  canEdit(): boolean {
+  const user = this.getCurrentUser();
+  return user?.role === 'Admin';
+}
+
+  canDelete(): boolean {
+  const user = this.getCurrentUser();
+  return user?.role === 'Admin';
+}
+
+  isAdmin(): boolean {
+  const user = this.getCurrentUser();
+  return user?.role === 'Admin';
+}
+
+  isUser(): boolean {
+  const user = this.getCurrentUser();
+  return user?.role === 'User';
+}
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);

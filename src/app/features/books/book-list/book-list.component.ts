@@ -6,6 +6,7 @@ import {Router } from '@angular/router';
 import { BookService } from '../../../core/services/book.service';
 import { AuthorService } from '../../../core/services/author.service';
 import { CategoryService } from '../../../core/services/category.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Book } from '../../../core/models/book.model';
 
 @Component({
@@ -21,6 +22,7 @@ export class BookListComponent implements OnInit {
   allBooks: Book[] = [];
   authors: any[] = [];
   categories: any[] = [];
+
   isLoading = true;
   errorMessage = '';
 
@@ -34,6 +36,7 @@ export class BookListComponent implements OnInit {
     private bookService: BookService,
     private authorService: AuthorService,
     private categoryService: CategoryService,
+    public authService: AuthService,
     private router: Router
   ) { }
 
@@ -70,7 +73,7 @@ loadBooks(): void {
       this.bookService.deleteBook(id).subscribe({
         next: (response) => {
             if (response && response.isSuccess) {
-                this.loadBooks(); // Kitap listesini güncelle
+                this.loadBooks();
             } else {
             alert('Kitap silinemedi: ' + response.message);
             }

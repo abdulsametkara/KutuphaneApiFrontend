@@ -2,9 +2,7 @@
   <!-- Header -->
   <div class="form-header">
     <h1>📝 Yeni Kategori Ekle</h1>
-    <button class="btn-back" (click)="goBack()">
-      <i class="fas fa-arrow-left"></i> Geri Dön
-    </button>
+    
   </div>
 
   <!-- Form Card -->
@@ -67,15 +65,13 @@
 
       <!-- Form Actions -->
       <div class="form-actions">
-        
-
         <button
           type="submit"
           class="btn-secondary"
           [disabled]="isSubmitting || !categoryForm.valid"
         >
           <span *ngIf="!isSubmitting">
-            Kategoriyi Kaydet
+           💾 Kategoriyi Kaydet
           </span>
           <span *ngIf="isSubmitting" class="btn-loading">
             <div class="btn-spinner"></div>
@@ -88,8 +84,11 @@
           (click)="clearForm()"
           [disabled]="isSubmitting"
         >
-          Temizle
+         🗑️ Temizle
         </button>
+        <button class="btn-back" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
       </div>
     </form>
   </div>

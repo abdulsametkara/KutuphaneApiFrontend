@@ -15,30 +15,58 @@ export class BookService {
     constructor(private http: HttpClient) { }
     
     getAllBooks(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/Book/ListAll`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get(`${this.apiUrl}/Book/ListAll`, { headers });
     }
     
-    getBookById(id: number): Observable<BookUpdateDto> {  
-        return this.http.get<BookUpdateDto>(`${this.apiUrl}/Book/GetById?id=${id}`);
+    getBookById(id: number): Observable<BookUpdateDto> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get<BookUpdateDto>(`${this.apiUrl}/Book/GetById?id=${id}`, { headers });
     }
     
     createBook(book: BookCreateDto): Observable<any> {
-        return this.http.post(`${this.apiUrl}/Book/Create`, book);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.post(`${this.apiUrl}/Book/Create`, book, { headers });
     }
     
     updateBook(book: BookUpdateDto): Observable<any> {
-        return this.http.put(`${this.apiUrl}/Book/Update`, book);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.put(`${this.apiUrl}/Book/Update`, book, { headers });
     }
     
     deleteBook(id: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/Book/Delete?id=${id}`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.delete(`${this.apiUrl}/Book/Delete?id=${id}`, { headers });
     }
 
     getBooksByCategory(categoryId: number): Observable<any> {
-        return this.http.get(`${this.apiUrl}/Book/GetBooksByCategoryId?categoryId=${categoryId}`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get(`${this.apiUrl}/Book/GetBooksByCategoryId?categoryId=${categoryId}`, { headers });
     }
 
     getBooksByAuthor(authorId: number): Observable<any> {
-        return this.http.get(`${this.apiUrl}/Book/GetBooksByAuthorId?authorId=${authorId}`);
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get(`${this.apiUrl}/Book/GetBooksByAuthorId?authorId=${authorId}`, { headers });
     }
 }

@@ -20,31 +20,55 @@ export class CategoryService {
 
   // Tüm kategorileri getir
   getAllCategories(): Observable<ApiResponse<Category[]>> {
-    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/ListAll`);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/ListAll`, { headers });
   }
 
   // ID ile kategori getir
   getCategoryById(id: number): Observable<ApiResponse<Category>> {
-    return this.http.get<ApiResponse<Category>>(`${this.apiUrl}/Category/GetById/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.get<ApiResponse<Category>>(`${this.apiUrl}/Category/GetById/${id}`, { headers });
   }
 
   // Yeni kategori oluştur
   createCategory(category: CategoryCreateDto): Observable<ApiResponse<Category>> {
-    return this.http.post<ApiResponse<Category>>(`${this.apiUrl}/Category/Create`, category);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.post<ApiResponse<Category>>(`${this.apiUrl}/Category/Create`, category, { headers });
   }
 
   // Kategori güncelle
   updateCategory(category: CategoryUpdateDto): Observable<ApiResponse<Category>> {
-    return this.http.put<ApiResponse<Category>>(`${this.apiUrl}/Category/Update`, category);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.put<ApiResponse<Category>>(`${this.apiUrl}/Category/Update`, category, { headers });
   }
 
   // Kategori sil
   deleteCategory(id: number): Observable<ApiResponse<boolean>> {
-    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/Category/Delete/${id}`);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/Category/Delete/${id}`, { headers });
   }
 
   // Kategori adı ile arama
   getCategoriesByName(name: string): Observable<ApiResponse<Category[]>> {
-    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/GetByName/${name}`);
+    const token = localStorage.getItem('token');
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    };
+    return this.http.get<ApiResponse<Category[]>>(`${this.apiUrl}/Category/GetByName/${name}`, { headers });
   }
 } 

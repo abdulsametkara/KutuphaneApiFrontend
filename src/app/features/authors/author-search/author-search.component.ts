@@ -13,14 +13,12 @@ import { AuthorService } from '../../../core/services/author.service';
 })
 
 export class AuthorSearchComponent implements OnInit {
-    // Search criteria
+
     searchName = '';
     searchId: number | null = null;
     
-    // Results
     authors: any[] = [];
     
-    // States
     isLoading = false;
     isSearching = false;
     errorMessage = '';
@@ -36,7 +34,7 @@ export class AuthorSearchComponent implements OnInit {
 
     
     searchAuthors(): void {
-        // Arama kriterlerini kontrol et
+
         if (!this.searchName.trim() && !this.searchId) {
             this.errorMessage = 'Lütfen yazar adı veya ID girin.';
             return;
@@ -45,12 +43,10 @@ export class AuthorSearchComponent implements OnInit {
         this.isSearching = true;
         this.errorMessage = '';
 
-        // ID ile arama öncelikli
         if (this.searchId && this.searchId > 0) {
             this.authorService.getAuthorById(this.searchId).subscribe({
                 next: (response: any) => {
                     if (response && response.isSuccess && response.data) {
-                        // Başarılı ve data var
                         this.authors = [response.data];
                     } else {
 
@@ -66,15 +62,12 @@ export class AuthorSearchComponent implements OnInit {
                 }
             });
         }
-        // İsim ile arama
         else if (this.searchName.trim()) {
             this.authorService.getAuthorByName(this.searchName).subscribe({
                 next: (response: any) => {
                     if (response && response.isSuccess && response.data && response.data.length > 0) {
-                        // Başarılı ve data var
                         this.authors = response.data;
                     } else {
-                        // Başarılı ama data yok VEYA başarısız
                         this.errorMessage = response.message;
                         this.authors = [];
                     }

@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
+import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  {
+    path: 'register',
+    loadComponent: () => import('./features/auth/register/register.component').then(c => c.RegisterComponent)
+  },
   {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then(c => c.LoginComponent)
@@ -16,13 +21,16 @@ export const routes: Routes = [
     path: 'books',
     loadComponent: () => import('./features/books/book-list/book-list.component').then(c => c.BookListComponent)
   },
+
   { 
     path: 'books/add',
-    loadComponent: () => import('./features/books/book-form/book-form.component').then(c => c.BookFormComponent)
+    loadComponent: () => import('./features/books/book-form/book-form.component').then(c => c.BookFormComponent),
+    canActivate: [AdminGuard]
   },
   {
     path: 'books/update/:id',
-    loadComponent: () => import('./features/books/book-update/book-update.component').then(c => c.BookUpdateComponent)
+    loadComponent: () => import('./features/books/book-update/book-update.component').then(c => c.BookUpdateComponent),
+    canActivate: [AdminGuard]
   },
   {
     path: 'books/search',
@@ -36,11 +44,13 @@ export const routes: Routes = [
   },
   {
     path: 'authors/add',
-    loadComponent: () => import('./features/authors/author-form/author-form.component').then(c => c.AuthorFormComponent)
+    loadComponent: () => import('./features/authors/author-form/author-form.component').then(c => c.AuthorFormComponent),
+    canActivate: [AdminGuard]
   },
   {
     path: 'authors/update/:id',
-    loadComponent: () => import('./features/authors/author-update/author-update.component').then(c => c.AuthorUpdateComponent)
+    loadComponent: () => import('./features/authors/author-update/author-update.component').then(c => c.AuthorUpdateComponent),
+    canActivate: [AdminGuard]
   },
   {
     path: 'authors/search',
@@ -54,7 +64,8 @@ export const routes: Routes = [
   },
   {
     path: 'categories/add',
-    loadComponent: () => import('./features/categories/category-form/category-form.component').then(c => c.CategoryForm)
+    loadComponent: () => import('./features/categories/category-form/category-form.component').then(c => c.CategoryForm),
+    canActivate: [AdminGuard]
   },
   {
     path: 'categories/search',
@@ -62,7 +73,8 @@ export const routes: Routes = [
   },
   {
     path: 'categories/update/:id',
-    loadComponent: () => import('./features/categories/category-update/category-update.component').then(c => c.CategoryUpdateComponent)
+    loadComponent: () => import('./features/categories/category-update/category-update.component').then(c => c.CategoryUpdateComponent),
+    canActivate: [AdminGuard]
   }
 
 ];

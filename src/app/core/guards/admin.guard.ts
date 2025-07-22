@@ -1,21 +1,35 @@
+// src/app/core/guards/admin.guard.ts
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router
+  ) {}
 
-  canActivate(): boolean {
-    const user = this.authService.getCurrentUser();
-    if (user && user.role === 'Admin') {
-      return true;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {    
+    if (!this.authService.isAuthenticated()) {
+      console.log('Kullanıcı giriş yapmamış');
+      this.router.navigate(['/login']);
+      return false;
     }
 
-    alert('Bu sayfayı görüntülemek için admin yetkisine sahip olmalısınız.');
-    this.router.navigate(['/login']);   
+    const user = this.authService.getCurrentUser();
+   if (user && user.role === 'Admin') {
+      console.log('Admin erişimi onaylandı');
+      return true;
+    }
+    console.log(' Admin yetkisi yok, role:', user?.role);
+    alert('Bu sayfaya erişim için admin yetkisine sahip olmalısınız.');
+    this.router.navigate(['/dashboard']);
     return false;
   }
 }

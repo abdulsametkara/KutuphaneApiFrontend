@@ -15,17 +15,16 @@ import { CategoryService } from '../../../core/services/category.service';
   styleUrls: ['./book-search.component.css']
 })
 export class BookSearchComponent implements OnInit {
-  // Search criteria
+
   searchTitle = '';
   selectedAuthorId = 0;
   selectedCategoryId = 0;
   
-  // Results
+  
   books: any[] = [];
   authors: any[] = [];
   categories: any[] = [];
   
-  // States
   isLoading = false;
   isSearching = false;
   errorMessage = '';
@@ -44,7 +43,6 @@ export class BookSearchComponent implements OnInit {
   loadFilterOptions(): void {
     this.isLoading = true;
     
-    // Load authors and categories for filters
     this.authorService.getAllAuthors().subscribe({
       next: (response: any) => {
         if (response && response.isSuccess) {
@@ -73,7 +71,6 @@ export class BookSearchComponent implements OnInit {
     this.errorMessage = '';
     this.books = [];
 
-    // Search by author
     if (this.selectedAuthorId > 0) {
       this.bookService.getBooksByAuthor(this.selectedAuthorId).subscribe({
         next: (response: any) => {
@@ -94,7 +91,7 @@ export class BookSearchComponent implements OnInit {
         }
       });
     }
-    // Search by category
+
     else if (this.selectedCategoryId > 0) {
       this.bookService.getBooksByCategory(this.selectedCategoryId).subscribe({
         next: (response: any) => {
@@ -115,13 +112,13 @@ export class BookSearchComponent implements OnInit {
         }
       });
     }
-    // Frontend title search (tüm kitapları getir ve filtrele)
+
     else if (this.searchTitle.trim()) {
       this.bookService.getAllBooks().subscribe({
         next: (response: any) => {
           if (response && response.isSuccess) {
             const allBooks = response.data;
-            // Frontend'de başlık ile filtrele
+
             this.books = allBooks.filter((book: any) => 
               book.title.toLowerCase().includes(this.searchTitle.toLowerCase())
             );

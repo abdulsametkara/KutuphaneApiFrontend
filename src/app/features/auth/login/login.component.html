@@ -75,14 +75,17 @@
     </form>
 
 
-    <div class="register-section">
-      <p class="register-text">
-        Hesabınız yok mu?
-        <a href="#" (click)="$event.preventDefault(); showRegisterAlert()" class="register-link">
-          Kayıt olun
-        </a>
-      </p>
-    </div>
+<div class="register-section">
+  <p class="register-text">
+        <span style="font-size: 1.4em;">Hesabınız yok mu? </span>
+    <button 
+      type="button"
+      (click)="goToRegister()" 
+      class="link-button">
+      Kayıt Ol
+    </button>
+  </p>
+</div>
   </div>
 
   <!-- Background decoration -->

@@ -1,6 +1,7 @@
-// dashboard.component.ts - Real API Integration
+// src/app/features/dashboard/dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { BookService } from '../../core/services/book.service';
@@ -11,7 +12,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -19,16 +20,36 @@ export class DashboardComponent implements OnInit {
   currentUser: any = null;
   isLoading = true;
 
-  // ✅ Gerçek API'den gelecek
+
+  permissions = {
+    canCreate: false,
+    canEdit: false,
+    canDelete: false,
+    canViewStats: false
+  };
+
+
   stats = {
     totalBooks: 0,
     totalAuthors: 0,
     totalCategories: 0
-
   };
 
-  // ✅ Gerçek API'den gelecek
-  recentBooks: any[] = [];
+
+  books: any[] = [];
+  authors: any[] = [];
+  categories: any[] = [];
+
+
+  searchQuery = '';
+  selectedCategoryId = 0;
+  selectedAuthorId = 0;
+  activeTab = 'books';
+  
+
+  filteredBooks: any[] = [];
+  filteredAuthors: any[] = [];
+  filteredCategories: any[] = [];
 
   constructor(
     private authService: AuthService,
@@ -40,9 +61,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Dashboard component yüklendi!');
-    console.log('Token mevcut:', !!this.authService.getToken());
-
     this.loadUserInfo();
+    this.setUserPermissions();
     this.loadDashboardData();
   }
 
@@ -56,84 +76,70 @@ export class DashboardComponent implements OnInit {
       };
       console.log('Giriş yapan kullanıcı:', this.currentUser);
     } else {
-      // Token yoksa veya geçersizse login'e yönlendir
       this.router.navigate(['/login']);
     }
   }
 
-  // ✅ Dashboard verilerini gerçek API'den çek
+  setUserPermissions(): void {
+    const userRole = this.currentUser?.role.toLowerCase();
+    
+    switch (userRole) {
+      case 'admin':
+        this.permissions = {
+          canCreate: true,
+          canEdit: true,
+          canDelete: true,
+          canViewStats: true
+        };
+        break;
+
+      case 'user':
+      default:
+        this.permissions = {
+          canCreate: false,
+          canEdit: false,
+          canDelete: false,
+          canViewStats: false
+        };
+        break;
+    }
+    console.log('Permissions:', this.permissions);
+  }
+
   loadDashboardData(): void {
     console.log('Dashboard verileri yükleniyor...');
     this.isLoading = true;
 
-    // ✅ Tüm API çağrılarını paralel olarak yap
     forkJoin({
       books: this.bookService.getAllBooks(),
       authors: this.authorService.getAllAuthors(),
       categories: this.categoryService.getAllCategories()
     }).subscribe({
       next: (responses) => {
-        console.log('API responses:', responses);
 
-        // ✅ İstatistikleri güncelle
-        this.stats = {
-          totalBooks: responses.books.isSuccess ? responses.books.data.length : 0,
-          totalAuthors: responses.authors.isSuccess ? responses.authors.data.length : 0,
-          totalCategories: responses.categories.isSuccess ? responses.categories.data.length : 0,
-        };
-
-        // ✅ Son eklenen kitapları al (ilk 4 kitap)
-        if (responses.books.isSuccess) {
-          this.recentBooks = responses.books.data
-            .slice(0, 4)
-            .map((book: any) => ({
-              id: book.id,
-              title: book.title,
-              authorName: this.getAuthorName(book.authorId, responses.authors.data),
-              categoryName: this.getCategoryName(book.categoryId, responses.categories.data)
-            }));
+        this.books = responses.books.isSuccess ? responses.books.data : [];
+        this.authors = responses.authors.isSuccess ? responses.authors.data : [];
+        this.categories = responses.categories.isSuccess ? responses.categories.data : [];
+        if (this.permissions.canViewStats) {
+          this.stats = {
+            totalBooks: this.books.length,
+            totalAuthors: this.authors.length,
+            totalCategories: this.categories.length
+          };
         }
-
-        console.log('Dashboard verileri yüklendi:', {
-          stats: this.stats,
-          recentBooks: this.recentBooks
-        });
-
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Dashboard verileri yüklenirken hata:', error);
         this.isLoading = false;
       }
     });
   }
 
-  // ✅ Yazar adını bul
-  getAuthorName(authorId: number, authors: any[]): string {
-    const author = authors.find(a => a.id === authorId);
-    return author ? `${author.name} ${author.surname}` : 'Bilinmeyen Yazar';
+  navigateTo(path: string): void {
+    this.router.navigate([path]);
   }
-
-  // ✅ Kategori adını bul
-  getCategoryName(categoryId: number, categories: any[]): string {
-    const category = categories.find(c => c.id === categoryId);
-    return category ? category.name : 'Bilinmeyen Kategori';
-  }
-
   logout(): void {
-    if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
-      this.authService.logout();
-      this.router.navigate(['/login']);
-    }
-  }
-
-  navigateTo(route: string): void {
-    this.router.navigate([route]);
-  }
-
-  // ✅ Gerçek API'den refresh
-  refreshStats(): void {
-    console.log('İstatistikler yenileniyor...');
-    this.loadDashboardData();
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

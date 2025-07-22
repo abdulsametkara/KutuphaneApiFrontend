@@ -1,4 +1,3 @@
-// book-form.component.ts - Real API Integration
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +35,7 @@ interface ApiResponse<T> {
   styleUrls: ['./book-form.component.css']
 })
 export class BookFormComponent implements OnInit {
-  // Form Data - ngModel için
+
   book: BookCreateDto = {
     title: '',
     description: '',
@@ -45,17 +44,14 @@ export class BookFormComponent implements OnInit {
     categoryId: 0
   };
 
-  // ✅ Gerçek API'den gelecek
   authors: Author[] = [];
   categories: Category[] = [];
 
-  // State Management - ngIf için
   isLoading = false;
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
   
-  // Loading States - ngIf için
   authorsLoading = true;
   categoriesLoading = true;
 
@@ -71,11 +67,9 @@ export class BookFormComponent implements OnInit {
     this.loadFormData();
   }
 
-  // ✅ Form verilerini gerçek API'den yükle
   loadFormData(): void {
     console.log('Form verileri yükleniyor...');
     
-    // ✅ Yazarları ve kategorileri paralel olarak yükle
     forkJoin({
       authors: this.authorService.getAllAuthors(),
       categories: this.categoryService.getAllCategories()
@@ -83,30 +77,22 @@ export class BookFormComponent implements OnInit {
       next: (responses) => {
         console.log('API responses:', responses);
 
-        // ✅ Yazarları yükle
         if (responses.authors.isSuccess) {
           this.authors = responses.authors.data;
-          console.log('👥 Yazarlar yüklendi:', this.authors);
         } else {
-          console.error('Yazarlar yüklenemedi:', responses.authors.message);
           this.errorMessage = 'Yazarlar yüklenemedi';
         }
 
-        // ✅ Kategorileri yükle
         if (responses.categories.isSuccess) {
           this.categories = responses.categories.data;
-          console.log('📚 Kategoriler yüklendi:', this.categories);
         } else {
-          console.error('Kategoriler yüklenemedi:', responses.categories.message);
           this.errorMessage = 'Kategoriler yüklenemedi';
         }
 
-        // ✅ Loading durumlarını kapat
         this.authorsLoading = false;
         this.categoriesLoading = false;
       },
       error: (error) => {
-        console.error('Form verileri yüklenirken hata:', error);
         this.errorMessage = 'Form verileri yüklenirken hata oluştu';
         this.authorsLoading = false;
         this.categoriesLoading = false;
@@ -114,7 +100,7 @@ export class BookFormComponent implements OnInit {
     });
   }
 
-  // Form submit
+
   onSubmit(): void {
     if (!this.isFormValid()) {
       this.errorMessage = 'Lütfen tüm alanları doldurun.';
@@ -131,10 +117,9 @@ export class BookFormComponent implements OnInit {
         if (response && response.isSuccess) {
           this.successMessage = response.message;
           
-          // 2 saniye sonra liste sayfasına dön
           setTimeout(() => {
             this.router.navigate(['/books']);
-          }, 2000);
+          }, 500);
         } else {
           this.errorMessage = response.message;
         }
@@ -147,7 +132,6 @@ export class BookFormComponent implements OnInit {
     });
   }
 
-  // Form validation
   isFormValid(): boolean {
     return this.book.title?.trim() !== '' &&
            (this.book.countofPage ?? 0) > 0 &&
@@ -156,7 +140,6 @@ export class BookFormComponent implements OnInit {
            this.book.description?.trim() !== '';
   }
 
-  // Form temizle
   clearForm(): void {
     this.book = {
       title: '',
@@ -169,17 +152,14 @@ export class BookFormComponent implements OnInit {
     this.successMessage = '';
   }
 
-  // Geri git
   goBack(): void {
     this.router.navigate(['/books']);
   }
 
-  // Data loaded check - ngIf için
   get isDataLoaded(): boolean {
     return !this.authorsLoading && !this.categoriesLoading;
   }
 
-  // TrackBy functions for performance - ngFor için
   trackByAuthor(index: number, author: Author): number {
     return author.id;
   }
@@ -188,12 +168,10 @@ export class BookFormComponent implements OnInit {
     return category.id;
   }
 
-  // ✅ Yazar adını formatla
   getAuthorDisplayName(author: Author): string {
     return `${author.name} ${author.surname} (${author.yearofBirth})`;
   }
 
-  // ✅ Kategori adını formatla
   getCategoryDisplayName(category: Category): string {
     return category.description 
       ? `${category.name} - ${category.description}`

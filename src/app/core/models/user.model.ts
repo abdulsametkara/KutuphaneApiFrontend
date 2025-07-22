@@ -22,5 +22,5 @@ export interface UserCreateDto {
 export interface LoginResponse {
   isSuccess: boolean;
   message: string;
-  data: string; // Backend'den direkt JWT token string'i geliyor
+  data: string;
 }

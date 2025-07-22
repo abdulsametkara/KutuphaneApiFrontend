@@ -116,11 +116,6 @@
         <div *ngIf="authorInput.invalid && authorInput.touched" class="field-error">
           Yazar seçimi gereklidir
         </div>
-
-        <!-- Authors Count Info - ngIf -->
-        <div *ngIf="authors.length > 0" class="info-text">
-          Toplam {{ authors.length }} yazar mevcut
-        </div>
       </div>
 
       <!-- Kategori Seçimi - ngFor kullanımı -->
@@ -170,7 +165,7 @@
           (click)="clearForm()"
           [disabled]="isSubmitting"
           class="btn btn-secondary">
-          🗑️ Formu Temizle
+          🗑️ Temizle
         </button>
 
         <button 

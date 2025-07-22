@@ -78,6 +78,9 @@ export class LoginComponent {
     this.errorMessage = '';
     this.successMessage = '';
   }
+  goToRegister(): void {
+  this.router.navigate(['/register']);
+}
 
   showRegisterAlert(): void {
     alert('Kayıt sayfası henüz oluşturulmadı');

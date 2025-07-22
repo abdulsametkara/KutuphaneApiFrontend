@@ -3,7 +3,7 @@
   <div class="header">
     <h1>📚 Kategori Yönetimi</h1>
     <div class="header-actions">
-      <button (click)="addNewCategory()" class="btn-primary">
+      <button *ngIf="authService.canCreate()" (click)="addNewCategory()" class="btn-primary">
         ➕ Yeni Kategori Ekle
       </button>
       <button (click)="searchCategories()" class="btn-thirty">
@@ -53,10 +53,10 @@
       </div>
 
       <div class="category-actions">
-          <button (click)="updateCategory(category)" class="action-btn edit-btn">
+          <button *ngIf="authService.canEdit()" (click)="updateCategory(category)" class="action-btn edit-btn">
             ✏️ Düzenle
           </button>
-          <button (click)="deleteCategory(category)" class="action-btn delete-btn">
+          <button *ngIf="authService.canDelete()" (click)="deleteCategory(category)" class="action-btn delete-btn">
             🗑️ Sil
           </button>
         </div>

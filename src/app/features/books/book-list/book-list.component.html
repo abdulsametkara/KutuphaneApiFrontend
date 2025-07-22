@@ -3,7 +3,7 @@
   <div class="header">
     <h1>📚 Kitap Yönetimi</h1>
     <div class="header-actions">
-      <button (click)="addNewBook()" class="btn-primary">
+      <button *ngIf="authService.canCreate()" (click)="addNewBook()" class="btn-primary">
         ➕ Yeni Kitap Ekle
       </button>
       <button (click)="searchBooks()" class="btn-thirty">
@@ -76,10 +76,10 @@
 
         <!-- Book Actions -->
         <div class="book-actions">
-          <button (click)="editBook(book.id)" class="action-btn edit-btn">
+          <button *ngIf="authService.canEdit()" (click)="editBook(book.id)" class="action-btn edit-btn">
             ✏️ Düzenle
           </button>
-          <button (click)="deleteBook(book.id)" class="action-btn delete-btn">
+          <button *ngIf="authService.canDelete()"(click)="deleteBook(book.id)" class="action-btn delete-btn">
             🗑️ Sil
           </button>
         </div>

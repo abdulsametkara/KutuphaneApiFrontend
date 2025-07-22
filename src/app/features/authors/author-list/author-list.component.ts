@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 import { AuthorService } from '../../../core/services/author.service';
 import { Author } from '../../../core/models/author.model';
 
@@ -24,7 +25,7 @@ export class AuthorListComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
-  constructor(private authorService: AuthorService, private router: Router) { }
+  constructor(private authorService: AuthorService, private router: Router, public authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadAuthors();
@@ -39,8 +40,7 @@ export class AuthorListComponent implements OnInit {
           if (response && (response.isSuccess === true || response.isSuccess === 'true' || response.message?.includes('başarıyla'))) {
             this.authors = this.authors.filter(a => a.id !== author.id);
             
-            // Success notification (optional)
-            // alert('Yazar başarıyla silindi');
+
           } else {
             alert(response.message);
           }

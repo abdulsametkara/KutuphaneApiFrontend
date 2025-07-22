@@ -12,28 +12,24 @@
     <div class="header-left">
       <h1>📚 Kütüphane Yönetim Sistemi</h1>
       <p class="welcome-text">
-        Hoş geldiniz, <strong>{{ currentUser?.Username || 'Kullanıcı' }}</strong>!
+        Hoş geldiniz
       </p>
     </div>
     <div class="header-right">
       <span class="user-role">{{ currentUser?.role || 'Kullanıcı' }}</span>
-      <button (click)="refreshStats()" class="refresh-btn" title="İstatistikleri Yenile">
-        🔄 Yenile
-      </button>
-      <button (click)="logout()" class="logout-btn">🚪 Çıkış</button>
+      <button (click)="logout()" class="logout-btn"> Çıkış</button>
     </div>
   </header>
 
   <!-- Success Message -->
   <div class="success-alert">
-    <div class="alert-icon">✅</div>
     <div class="alert-text">
-      <strong>Başarılı!</strong> Backend bağlantısı çalışıyor ve dashboard yüklendi.
+      <strong>Giriş Başarılı!</strong>
     </div>
   </div>
 
   <!-- Stats Cards -->
-  <section class="stats-section">
+<section *ngIf="permissions.canViewStats" class="stats-section">
     <h2>📊 Genel Bakış</h2>
     <div class="stats-grid">
       <div class="stat-card books-card">
@@ -69,26 +65,25 @@
 
   <!-- Navigation Cards -->
   <section class="navigation-section">
-    <h2>🧭 Hızlı Erişim</h2>
     <div class="nav-grid">
       <div class="nav-card books-nav" (click)="navigateTo('/books')">
         <div class="nav-icon">📚</div>
-        <h3>Kitap Yönetimi</h3>
-        <p>Kitap ekle, düzenle, sil ve listele</p>
+        <h3>Kitaplar</h3>
+        <p>Kitap işlemleri</p>
         <div class="nav-arrow">→</div>
       </div>
 
       <div class="nav-card authors-nav" (click)="navigateTo('/authors')">
         <div class="nav-icon">👨‍💼</div>
-        <h3>Yazar Yönetimi</h3>
-        <p>Yazar bilgilerini yönet</p>
+        <h3>Yazarlar</h3>
+        <p>Yazar işlemleri</p>
         <div class="nav-arrow">→</div>
       </div>
 
       <div class="nav-card categories-nav" (click)="navigateTo('/categories')">
         <div class="nav-icon">🗂️</div>
-        <h3>Kategori Yönetimi</h3>
-        <p>Kategori düzenle ve ekle</p>
+        <h3>Kategoriler</h3>
+        <p>Kategori işlemleri</p>
         <div class="nav-arrow">→</div>
       </div>
 
@@ -97,26 +92,5 @@
   </section>
 
 
-
-  <!-- Quick Actions -->
-  <section class="quick-actions">
-    <h2>⚡ Hızlı İşlemler</h2>
-    <div class="action-buttons">
-      <button class="action-btn-large add-book" (click)="navigateTo('/books/add')">
-        <span class="btn-icon">📚</span>
-        <span class="btn-text">Yeni Kitap Ekle</span>
-      </button>
-
-      <button class="action-btn-large add-author" (click)="navigateTo('/authors/add')">
-        <span class="btn-icon">👨‍💼</span>
-        <span class="btn-text">Yeni Yazar Ekle</span>
-      </button>
-
-      <button class="action-btn-large add-category" (click)="navigateTo('/categories/add')">
-        <span class="btn-icon">🗂️</span>
-        <span class="btn-text">Yeni Kategori Ekle</span>
-      </button>
-    </div>
-  </section>
 
 </div>

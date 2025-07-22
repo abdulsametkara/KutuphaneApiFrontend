@@ -80,7 +80,7 @@ export class CategoryUpdateComponent implements OnInit {
           this.successMessage = response.message;
           this.clearMessages();
                   setTimeout(() => {
-                      this.router.navigate(['/authors']);
+                      this.router.navigate(['/categories']);
                   }, 2000);
         } else {
           this.errorMessage = response.message;

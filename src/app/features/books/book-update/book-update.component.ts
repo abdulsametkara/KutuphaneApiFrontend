@@ -46,7 +46,6 @@ export class BookUpdateComponent implements OnInit {
     categoryId: 0
   };
 
-  // ✅ Gerçek API'den gelecek
   authors: Author[] = [];
   categories: Category[] = [];
 
@@ -69,7 +68,6 @@ export class BookUpdateComponent implements OnInit {
   ngOnInit(): void {
     console.log('BookUpdateComponent yüklendi!');
     
-    // URL'den ID parametresini al
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.loadComponentData(Number(id));
@@ -79,12 +77,10 @@ export class BookUpdateComponent implements OnInit {
     }
   }
 
-  // ✅ Tüm verileri paralel olarak yükle - TypeScript tip düzeltmesi
   loadComponentData(bookId: number): void {
     console.log('Component verileri yükleniyor...');
     this.isLoading = true;
 
-    // ✅ Tip tanımlamaları ile forkJoin
     forkJoin({
       book: this.bookService.getBookById(bookId),
       authors: this.authorService.getAllAuthors(),
@@ -97,16 +93,14 @@ export class BookUpdateComponent implements OnInit {
       }) => {
         console.log('API responses:', responses);
 
-        // ✅ Kitap verilerini yükle - tip kontrolü
         if (responses.book && responses.book.isSuccess) {
           this.book = responses.book.data;
-          console.log('Kitap verileri yüklendi:', this.book);
+
         } else {
           this.errorMessage = responses.book?.message || 'Kitap verileri yüklenemedi';
-          console.error('Kitap yükleme hatası:', responses.book);
+
         }
 
-        // ✅ Yazarları yükle - tip kontrolü
         if (responses.authors && responses.authors.isSuccess) {
           this.authors = responses.authors.data;
           console.log('Yazarlar yüklendi:', this.authors);
@@ -114,7 +108,6 @@ export class BookUpdateComponent implements OnInit {
           console.error('Yazarlar yüklenemedi:', responses.authors?.message);
         }
 
-        // ✅ Kategorileri yükle - tip kontrolü
         if (responses.categories && responses.categories.isSuccess) {
           this.categories = responses.categories.data;
           console.log('Kategoriler yüklendi:', this.categories);
@@ -122,7 +115,6 @@ export class BookUpdateComponent implements OnInit {
           console.error('Kategoriler yüklenemedi:', responses.categories?.message);
         }
 
-        // ✅ Loading durumlarını kapat
         this.isLoading = false;
         this.authorsLoading = false;
         this.categoriesLoading = false;
@@ -181,7 +173,7 @@ export class BookUpdateComponent implements OnInit {
 
   clearForm(): void {
     this.book = {
-      id: this.book.id, // ID'yi koru
+      id: this.book.id,
       title: '',
       description: '',
       countofPage: 0,

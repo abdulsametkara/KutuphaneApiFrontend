@@ -6,13 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthorService } from '../../../core/services/author.service';
 import { AuthorUpdateDto } from '../../../core/models/author.model';
 
-// ApiResponse interface'ini daha detaylı yap
 interface ApiResponse<T> {
     isSuccess: boolean;
     message: string;
     data: T;
-    errors?: string[]; // Validation errors için
-    statusCode?: number; // HTTP status code
+    errors?: string[]; 
+    statusCode?: number;
 }
 
 interface Author {
@@ -52,7 +51,6 @@ export class AuthorUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // URL'den ID parametresini al
         const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             this.loadComponentData(Number(id));
@@ -100,7 +98,6 @@ export class AuthorUpdateComponent implements OnInit {
       this.authorService.updateAuthor(this.author).subscribe({
           next: (response: ApiResponse<Author>) => {
               if (response && response.isSuccess) {
-                  // ✅ BAŞARI durumu
                   this.successMessage = response.message ;
                   
                   this.clearMessages();
@@ -114,7 +111,6 @@ export class AuthorUpdateComponent implements OnInit {
               this.isSubmitted = false;
           },
           error: (error: any) => {
-              // ❌ Network veya diğer hatalar
               this.errorMessage = error?.error?.message;
               this.isSubmitted = false;
               this.clearMessages();
@@ -130,7 +126,7 @@ export class AuthorUpdateComponent implements OnInit {
 
     clearForm(): void {
         this.author = {
-            id: this.author.id, // ID'yi koru
+            id: this.author.id,
             name: '',
             surname: '',
             placeofBirth: '',
@@ -148,7 +144,6 @@ export class AuthorUpdateComponent implements OnInit {
         return !this.isLoading && this.author && Object.keys(this.author).length > 0;
     }
 
-    // Mesajları otomatik temizle
     private clearMessages(): void {
         setTimeout(() => {
             this.errorMessage = '';

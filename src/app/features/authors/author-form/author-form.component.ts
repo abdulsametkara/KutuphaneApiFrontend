@@ -30,7 +30,7 @@ interface Author {
 })
 
 export class AuthorFormComponent implements OnInit {
-  // Form Data - ngModel için
+
   author: AuthorCreateDto = {
     name: '',
     surname: '',
@@ -131,7 +131,7 @@ export class AuthorFormComponent implements OnInit {
              this.author.surname.trim() !== '' &&
              this.author.yearofBirth > 0;
     }
-    // Formu temizle
+
     clearForm(): void {
       this.author = {
         name: '',
