@@ -7,9 +7,10 @@ import { UserLoginDto, UserCreateDto, LoginResponse } from '../models/user.model
 
 interface JwtPayload {
   name: string;
-  sid: string; // user ID
+  sid: string;
   email: string;
-  exp: number; // expiration timestamp
+  role: string;
+  exp: number;
 }
 
 @Injectable({
@@ -37,7 +38,6 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
-  // JWT Token'ı decode et
   getDecodedToken(): JwtPayload | null {
     const token = this.getToken();
     if (token) {
@@ -51,7 +51,6 @@ export class AuthService {
     return null;
   }
 
-  // Kullanıcı bilgilerini al
   getCurrentUser(): any {
     const decodedToken = this.getDecodedToken();
     if (decodedToken) {
@@ -59,13 +58,12 @@ export class AuthService {
         id: decodedToken.sid,
         name: decodedToken.name,
         email: decodedToken.email,
-        role: 'Admin' // Şimdilik sabit, ileride token'dan gelecek
+        role: decodedToken.role
       };
     }
     return null;
   }
 
-  // Token geçerli mi?
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -73,7 +71,6 @@ export class AuthService {
     const decodedToken = this.getDecodedToken();
     if (!decodedToken) return false;
 
-    // Token expire kontrolü
     const currentTime = Date.now() / 1000;
     return decodedToken.exp > currentTime;
   }
