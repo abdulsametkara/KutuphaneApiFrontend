@@ -143,6 +143,12 @@
           Kategori seçimi gereklidir
         </div>
       </div>
+      <!-- Resim Yükleme -->
+
+      <input type="file" (change)="onFileSelected($event)" />
+  <!-- Resim yüklendiyse önizleme -->
+  <img *ngIf="previewUrl" [src]="previewUrl" width="100" />
+  <button type="submit">Kaydet</button>
 
       <!-- Form Actions -->
       <div class="form-actions">

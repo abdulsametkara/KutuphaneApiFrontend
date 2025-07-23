@@ -54,6 +54,15 @@
         
         <!-- Book Info -->
         <div class="book-info">
+
+          
+          <!-- Book Image -->
+            <div class="book-image">
+              <img *ngIf="book.fileKey; else noImage" [src]="book.fileKey" alt="{{ book.title }}" width="250" />
+              <ng-template #noImage>
+                <div class="no-image">📷 Resim Yok</div>
+              </ng-template>
+            </div>
           <h3 class="book-title">{{ book.title }}</h3>
           <p class="book-description" *ngIf="book.description">
             {{ book.description }}

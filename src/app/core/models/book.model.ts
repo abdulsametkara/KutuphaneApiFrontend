@@ -7,6 +7,8 @@ export interface Book {
   authorId  : number;
   categoryId: number;
   recordDate: Date;
+  fileKey?: string;
+
 }
 
 export interface BookCreateDto {
@@ -15,6 +17,8 @@ export interface BookCreateDto {
     countofPage: number;
     authorId: number;
     categoryId: number;
+    fileKey?: string;
+
 }
 
 export interface BookUpdateDto {
@@ -24,4 +28,6 @@ export interface BookUpdateDto {
     countofPage?: number;
     authorId?: number;
     categoryId?: number;
+    fileKey?: string;
+
 }

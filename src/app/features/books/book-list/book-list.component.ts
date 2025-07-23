@@ -7,6 +7,7 @@ import { BookService } from '../../../core/services/book.service';
 import { AuthorService } from '../../../core/services/author.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { UploadService } from '../../../core/services/upload.service';
 import { Book } from '../../../core/models/book.model';
 
 @Component({
@@ -37,14 +38,26 @@ export class BookListComponent implements OnInit {
     private authorService: AuthorService,
     private categoryService: CategoryService,
     public authService: AuthService,
+    private uploadService: UploadService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadBooks();
     this.loadFilterData();
-  }
 
+    this.bookService.getAllBooks().subscribe(res => {
+    this.books = res.data;
+    this.books.forEach(book => {
+      if (book.fileKey) {
+        this.uploadService.getFile(book.fileKey).subscribe(file => {
+          book.fileKey= `data:${file.data.fileType};base64,${file.data.base64String}`;
+        });
+      }
+    });
+  }
+    );
+  }
 loadBooks(): void {
     this.isLoading = true;
     this.errorMessage = '';

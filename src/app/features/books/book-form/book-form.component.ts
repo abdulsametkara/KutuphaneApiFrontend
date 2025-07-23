@@ -6,6 +6,7 @@ import { BookService } from '../../../core/services/book.service';
 import { AuthorService } from '../../../core/services/author.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { BookCreateDto } from '../../../core/models/book.model';
+import { UploadService} from '../../../core/services/upload.service';
 import { forkJoin } from 'rxjs';
 
 interface Author {
@@ -54,14 +55,37 @@ export class BookFormComponent implements OnInit {
   
   authorsLoading = true;
   categoriesLoading = true;
+  previewUrl: string | null = null;
 
   constructor(
     private bookService: BookService,
     private authorService: AuthorService,
     private categoryService: CategoryService,
-    private router: Router
+    private router: Router,
+    private uploadService: UploadService
   ) { }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Önizleme
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Sunucuya yükle
+      this.uploadService.uploadFile(file).subscribe({
+        next: (res) => {
+          this.book.fileKey = res.data.fileKey;
+        },
+        error: () => {
+          alert("Resim yüklenirken hata oluştu.");
+        }
+      });
+    }
+  }
   ngOnInit(): void {
     console.log('📝 Book Form component yüklendi!');
     this.loadFormData();
