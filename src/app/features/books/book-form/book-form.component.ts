@@ -75,13 +75,15 @@ export class BookFormComponent implements OnInit {
       };
       reader.readAsDataURL(file);
 
-      // Sunucuya yükle
+
       this.uploadService.uploadFile(file).subscribe({
         next: (res) => {
           this.book.fileKey = res.data.fileKey;
         },
         error: () => {
-          alert("Resim yüklenirken hata oluştu.");
+          this.errorMessage = 'Bu dosya daha önce yüklenmiş. Lütfen farklı bir resim seçin.';
+          this.previewUrl = null;
+          
         }
       });
     }
