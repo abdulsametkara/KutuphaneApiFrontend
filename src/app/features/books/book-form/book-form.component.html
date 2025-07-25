@@ -143,6 +143,51 @@
           Kategori seçimi gereklidir
         </div>
       </div>
+
+      <!-- Toplam Kopya Sayısı -->
+      <div class="form-group">
+        <label for="totalCopies">Toplam Kopya Sayısı *</label>
+        <input 
+          id="totalCopies"
+          type="number"
+          [(ngModel)]="book.totalCopies"
+          name="totalCopies"
+          placeholder="Toplam kopya sayısını girin"
+          class="form-control"
+          min="1"
+          required
+          #totalCopiesInput="ngModel">
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="totalCopiesInput.invalid && totalCopiesInput.touched" class="field-error">
+          <span *ngIf="book.totalCopies <= 0">Toplam kopya sayısı 0'dan büyük olmalıdır</span>
+          <span *ngIf="book.totalCopies == null">Toplam kopya sayısı gereklidir</span>
+        </div>
+      </div>
+
+      <!-- Mevcut Kopya Sayısı -->
+      <div class="form-group">
+        <label for="availableCopies">Mevcut Kopya Sayısı *</label>
+        <input 
+          id="availableCopies"
+          type="number"
+          [(ngModel)]="book.availableCopies"
+          name="availableCopies"
+          placeholder="Mevcut kopya sayısını girin"
+          class="form-control"
+          min="0"
+          [max]="book.totalCopies"
+          required
+          #availableCopiesInput="ngModel">
+        
+        <!-- Field Error - ngIf ile validation -->
+        <div *ngIf="availableCopiesInput.invalid && availableCopiesInput.touched" class="field-error">
+          <span *ngIf="book.availableCopies < 0">Mevcut kopya sayısı 0'dan küçük olamaz</span>
+          <span *ngIf="book.availableCopies > book.totalCopies">Mevcut kopya sayısı toplam kopyadan fazla olamaz</span>
+          <span *ngIf="book.availableCopies == null">Mevcut kopya sayısı gereklidir</span>
+        </div>
+      </div>
+
       <!-- Resim Yükleme -->
 
       <input type="file" (change)="onFileSelected($event)" />

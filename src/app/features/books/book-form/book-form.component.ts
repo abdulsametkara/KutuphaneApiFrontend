@@ -42,7 +42,9 @@ export class BookFormComponent implements OnInit {
     description: '',
     countofPage: 0,
     authorId: 0,
-    categoryId: 0
+    categoryId: 0,
+    totalCopies: 1,
+    availableCopies: 1
   };
 
   authors: Author[] = [];
@@ -163,7 +165,10 @@ export class BookFormComponent implements OnInit {
            (this.book.countofPage ?? 0) > 0 &&
            (this.book.authorId ?? 0) > 0 &&
            (this.book.categoryId ?? 0) > 0 &&
-           this.book.description?.trim() !== '';
+           this.book.description?.trim() !== '' &&
+           (this.book.totalCopies ?? 0) > 0 &&
+           (this.book.availableCopies ?? 0) >= 0 &&
+           (this.book.availableCopies ?? 0) <= (this.book.totalCopies ?? 0);
   }
 
   clearForm(): void {
@@ -172,7 +177,9 @@ export class BookFormComponent implements OnInit {
       description: '',
       countofPage: 0,
       authorId: 0,
-      categoryId: 0
+      categoryId: 0,
+      totalCopies: 1,
+      availableCopies: 1
     };
     this.errorMessage = '';
     this.successMessage = '';

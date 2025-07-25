@@ -20,7 +20,8 @@ export interface BookCreateDto {
     authorId: number;
     categoryId: number;
     fileKey?: string;
-
+    totalCopies: number;
+    availableCopies: number;
 }
 
 export interface BookUpdateDto {

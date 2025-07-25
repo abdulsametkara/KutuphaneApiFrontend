@@ -22,7 +22,6 @@ export const routes: Routes = [
     loadComponent: () => import('./features/books/book-list/book-list.component').then(c => c.BookListComponent)
   },
 
-  // 🆕 Ödünç İşlemleri - Sadece Admin
   { 
     path: 'books/loans',
     loadComponent: () => import('./features/books/book-loan-list/book-loan-list.component').then(c => c.BookLoanListComponent),
