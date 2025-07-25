@@ -8,6 +8,7 @@ import { AuthorService } from '../../../core/services/author.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { UploadService } from '../../../core/services/upload.service';
+import { BookLoanService } from '../../../core/services/book-loan.service';
 import { Book } from '../../../core/models/book.model';
 import { forkJoin } from 'rxjs';
 
@@ -46,6 +47,8 @@ export class BookListComponent implements OnInit {
   selectedBook: Book | null = null;
   selectedAuthor: Author | null = null;
   selectedCategory: Category | null = null;
+  isBorrowing = false;
+  userActiveLoans: any[] = [];
 
   constructor(
     private bookService: BookService,
@@ -53,6 +56,7 @@ export class BookListComponent implements OnInit {
     private categoryService: CategoryService,
     public authService: AuthService,
     private uploadService: UploadService,
+    private bookLoanService: BookLoanService,
     private router: Router
   ) { }
 
@@ -60,6 +64,77 @@ export class BookListComponent implements OnInit {
     this.loadBooks();
     this.loadFilterData();
     this.loadBookImages();
+    this.loadUserActiveLoans();
+  }
+
+  loadUserActiveLoans(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser && currentUser.id) {
+      this.bookLoanService.getUserActiveLoans(currentUser.id).subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.userActiveLoans = response.data;
+            console.log('Kullanıcı aktif ödünç kitapları:', this.userActiveLoans);
+          } else {
+            console.log('Aktif ödünç kitap bulunamadı.');
+          }
+        },
+        error: (error) => {
+          console.error('Aktif ödünç kitaplar yüklenirken hata:', error);
+        }
+      });
+    }
+  }
+
+  borrowBook(book: Book): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || !currentUser.id) {
+      alert('Lütfen önce giriş yapın.');
+      return;
+    }
+
+    if (book.availableCopies <= 0) {
+      alert('Bu kitap şu anda mevcut değil.');
+      return;
+    }
+
+    if (this.isBookBorrowed(book.id)) {
+      alert('Bu kitabı zaten ödünç almışsınız.');
+      return;
+    }
+
+    this.isBorrowing = true;
+    
+    const borrowData = {
+      bookId: book.id,
+      userId: currentUser.id,
+    };
+
+    console.log('Ödünç alma isteği:', borrowData);
+
+    this.bookLoanService.createBookLoan(borrowData).subscribe({
+      next: (response) => {
+        console.log('Ödünç alma yanıtı:', response);
+        
+        if (!response.success) {
+          alert('Kitap başarıyla ödünç alındı! 📚');
+          
+          this.loadBooks();
+          this.loadUserActiveLoans();
+          this.closeBookModal();
+          
+        } else {
+          alert('Hata: ');
+        }
+        this.isBorrowing = false;
+        
+      },
+      error: (error) => {
+        console.error('Kitap ödünç alınırken hata:', error);
+        alert('Kitap ödünç alınırken bir hata oluştu.');
+        this.isBorrowing = false;
+      }
+    });
   }
 
   loadBooks(): void {
@@ -68,10 +143,11 @@ export class BookListComponent implements OnInit {
 
     this.bookService.getAllBooks().subscribe({
       next: (response) => {
-        console.log('Backend response:', response);
+        console.log('Kitaplar API yanıtı:', response);
         
         if (response && response.isSuccess) {
           this.books = response.data || [];
+          console.log('Yüklenen kitaplar:', this.books);
         } else {
           this.errorMessage = response.message || 'Kitaplar yüklenemedi';
         }
@@ -117,25 +193,21 @@ export class BookListComponent implements OnInit {
     });
   }
 
-  // 🆕 POPUP METHODS
   openBookModal(book: Book): void {
-    this.selectedBook = book;
     
-    // Find author details
+    this.selectedBook = book; 
     this.selectedAuthor = this.authors.find(a => a.id === book.authorId) || null;
-    
-    // Find category details  
     this.selectedCategory = this.categories.find(c => c.id === book.categoryId) || null;
-    
     this.showModal = true;
     
-    // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
     
     console.log('Modal açıldı:', {
       book: this.selectedBook,
       author: this.selectedAuthor,
-      category: this.selectedCategory
+      category: this.selectedCategory,
+      availableCopies: book.availableCopies,
+      totalCopies: book.totalCopies
     });
   }
 
@@ -145,11 +217,9 @@ export class BookListComponent implements OnInit {
     this.selectedAuthor = null;
     this.selectedCategory = null;
     
-    // Restore body scroll
     document.body.style.overflow = 'auto';
   }
 
-  // 🆕 HELPER METHODS FOR POPUP
   getAuthorName(authorId: number): string {
     const author = this.authors.find(a => a.id === authorId);
     return author ? `${author.name} ${author.surname}` : 'Yazar bulunamadı';
@@ -168,13 +238,32 @@ export class BookListComponent implements OnInit {
            (this.selectedAuthor.placeofBirth ? ` - ${this.selectedAuthor.placeofBirth}` : '');
   }
 
+  getAvailableCopies(bookId: number): number {
+    if (!bookId) return 0;
+    const book = this.books.find(b => b.id === bookId);
+    const copies = book?.availableCopies || 0;
+    console.log(`Kitap ID ${bookId} için mevcut kopya sayısı:`, copies);
+    return copies;
+  }
+
+  getTotalCopies(bookId: number): number {
+    if (!bookId) return 0;
+    const book = this.books.find(b => b.id === bookId);
+    return book?.totalCopies || 0;
+  }
+
+  isBookBorrowed(bookId: number): boolean {
+    if (!bookId || !this.userActiveLoans) return false;
+    const borrowed = this.userActiveLoans.some(loan => loan.bookId === bookId && !loan.isReturned);
+    console.log(`Kitap ID ${bookId} ödünç alınmış mı:`, borrowed);
+    return borrowed;
+  }
 
   onBackdropClick(event: Event): void {
     if (event.target === event.currentTarget) {
       this.closeBookModal();
     }
   }
-
 
   onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Escape' && this.showModal) {
@@ -188,7 +277,6 @@ export class BookListComponent implements OnInit {
         next: (response) => {
           if (response && response.isSuccess) {
             this.books = this.books.filter(book => book.id !== id);
-            // Close modal if deleted book was selected
             if (this.selectedBook?.id === id) {
               this.closeBookModal();
             }
@@ -220,5 +308,4 @@ export class BookListComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/dashboard']);
   }
-
 }

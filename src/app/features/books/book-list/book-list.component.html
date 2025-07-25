@@ -71,8 +71,15 @@
           
           <h3 class="book-title">{{ book.title }}</h3>
           
-          
-          
+          <!-- 🆕 Stok bilgisi kartlarda da gösterilsin -->
+          <div class="book-stock-info">
+            <span class="stock-mini-badge" 
+                  [class.available]="book.availableCopies > 0"
+                  [class.unavailable]="book.availableCopies === 0">
+              📦 {{ book.availableCopies }}/{{ book.totalCopies }}
+            </span>
+          </div>
+        </div>
     
         <!-- Book Actions -->
         <div class="book-actions" (click)="$event.stopPropagation()">
@@ -156,9 +163,7 @@
               <span class="detail-icon">📄</span>
               <span class="detail-label">Sayfa Sayısı:</span>
               <span class="detail-value">{{ selectedBook.countofPage }} sayfa</span>
-            </div>
-
-            
+            </div>  
           </div>
         </div>
 
@@ -170,9 +175,38 @@
 
       </div>
 
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        
+        <!-- 🆕 STOK BİLGİSİ -->
+        <div class="stock-info">
+          <span class="stock-badge" 
+                [class.available]="getAvailableCopies(selectedBook?.id || 0) > 0"
+                [class.unavailable]="getAvailableCopies(selectedBook?.id || 0) === 0">
+            📦 {{ getAvailableCopies(selectedBook?.id || 0) }}/{{ getTotalCopies(selectedBook?.id || 0) }} Mevcut
+          </span>
+        </div>
 
+        <!-- 🆕 ÖDÜNÇ AL BUTONU -->
+        <button 
+          *ngIf="!isBookBorrowed(selectedBook?.id || 0) && getAvailableCopies(selectedBook?.id || 0) > 0"
+          (click)="borrowBook(selectedBook!)" 
+          class="modal-btn borrow-btn"
+          [disabled]="isBorrowing">
+          <span *ngIf="!isBorrowing">📚 Ödünç Al</span>
+          <span *ngIf="isBorrowing">⏳ Ödünç Alınıyor...</span>
+        </button>
 
+        <!-- 🆕 ZATEN ÖDÜNÇ ALINMIŞ MESAJI -->
+        <div *ngIf="isBookBorrowed(selectedBook?.id || 0)" class="already-borrowed">
+          ✅ Bu kitabı zaten ödünç almışsınız
+        </div>
+
+        <!-- 🆕 STOKTİ MESAJI -->
+        <div *ngIf="getAvailableCopies(selectedBook?.id || 0) === 0" class="out-of-stock">
+          ❌ Bu kitap şu anda mevcut değil
+        </div>  
+      </div>
     </div>
   </div>
-
-</div>  
+</div>

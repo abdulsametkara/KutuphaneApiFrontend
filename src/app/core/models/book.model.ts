@@ -8,6 +8,8 @@ export interface Book {
   categoryId: number;
   recordDate: Date;
   fileKey?: string;
+  totalCopies: number;
+  availableCopies: number;
 
 }
 
