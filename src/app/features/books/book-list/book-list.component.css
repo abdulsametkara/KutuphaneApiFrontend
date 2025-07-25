@@ -636,3 +636,216 @@
 .modal-content::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
+/* 🆕 STOK DURUMU VE MODAL FOOTER CSS - book-list.component.css dosyasına eklenecek */
+
+/* Book Stock Info - Kartlardaki stok bilgisi */
+.book-stock-info {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.stock-mini-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Stok mevcut */
+.stock-mini-badge.available {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Stok tükendi */
+.stock-mini-badge.unavailable {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* Hover efektleri */
+.stock-mini-badge.available:hover {
+  background: linear-gradient(45deg, #45a049, #388e3c);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+.stock-mini-badge.unavailable:hover {
+  background: linear-gradient(45deg, #d32f2f, #c62828);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(244, 67, 54, 0.4);
+}
+
+/* 🆕 MODAL FOOTER DÜZENLEMESİ */
+.modal-footer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  padding: 25px 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 0 20px 20px;
+  flex-wrap: wrap;
+}
+
+/* Modal Footer - Stok bilgisi stilleri */
+.stock-info {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.stock-badge.available {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+}
+
+.stock-badge.unavailable {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 6px 12px rgba(244, 67, 54, 0.3);
+}
+
+.stock-badge:hover {
+  transform: translateY(-2px);
+}
+
+/* Ödünç alma butonu */
+.borrow-btn {
+  background: linear-gradient(45deg, #FF9800, #F57C00);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 12px rgba(255, 152, 0, 0.3);
+}
+
+.borrow-btn:hover:not(:disabled) {
+  background: linear-gradient(45deg, #F57C00, #E65100);
+  box-shadow: 0 8px 15px rgba(255, 152, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.borrow-btn:disabled {
+  background: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Duruma göre mesajlar */
+.already-borrowed, .out-of-stock {
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.already-borrowed {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.out-of-stock {
+  background: linear-gradient(45deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* Responsive - Mobil uyumluluk */
+@media (max-width: 768px) {
+  .stock-mini-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .stock-info {
+    justify-content: center;
+  }
+  
+  .stock-badge {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .borrow-btn {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .already-borrowed, .out-of-stock {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-footer {
+    padding: 20px;
+  }
+  
+  .stock-badge {
+    font-size: 13px;
+    padding: 10px 15px;
+  }
+  
+  .borrow-btn {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+  
+  .already-borrowed, .out-of-stock {
+    font-size: 13px;
+    padding: 10px 15px;
+  }
+}

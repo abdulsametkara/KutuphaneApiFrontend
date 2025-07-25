@@ -53,10 +53,8 @@ export class AuthService {
 
   getCurrentUser(): any {
   const token = this.getToken();
-  console.log('🎫 Raw token:', token);
   
   const decodedToken = this.getDecodedToken();
-  console.log('🔍 Decoded token:', decodedToken);
   
   if (decodedToken) {
     const user = {

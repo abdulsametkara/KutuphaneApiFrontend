@@ -72,15 +72,21 @@ export class BookListComponent implements OnInit {
     if (currentUser && currentUser.id) {
       this.bookLoanService.getUserActiveLoans(currentUser.id).subscribe({
         next: (response) => {
-          if (response.success && response.data) {
-            this.userActiveLoans = response.data;
+          console.log('getUserActiveLoans response:', response);
+          // Backend IsSuccess kullanıyor, frontend success bekliyor
+          const isSuccess = (response as any).isSuccess || response.success;
+          if (isSuccess) {
+            // Backend Data kullanıyor, frontend data bekliyor  
+            this.userActiveLoans = (response as any).data || (response as any).Data || [];
             console.log('Kullanıcı aktif ödünç kitapları:', this.userActiveLoans);
           } else {
             console.log('Aktif ödünç kitap bulunamadı.');
+            this.userActiveLoans = [];
           }
         },
         error: (error) => {
           console.error('Aktif ödünç kitaplar yüklenirken hata:', error);
+          this.userActiveLoans = [];
         }
       });
     }
@@ -116,15 +122,21 @@ export class BookListComponent implements OnInit {
       next: (response) => {
         console.log('Ödünç alma yanıtı:', response);
         
-        if (!response.success) {
+        // Backend IsSuccess kullanıyor, frontend success bekliyor
+        const isSuccess = (response as any).isSuccess || response.success;
+        if (isSuccess) {
           alert('Kitap başarıyla ödünç alındı! 📚');
           
+          // UI'yi güncelle
           this.loadBooks();
           this.loadUserActiveLoans();
+          
+          // Modal'ı kapat
           this.closeBookModal();
           
         } else {
-          alert('Hata: ');
+          const message = (response as any).message || response.message || 'Bilinmeyen hata';
+          alert('Hata: ' + message);
         }
         this.isBorrowing = false;
         
