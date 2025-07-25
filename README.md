@@ -138,12 +138,6 @@ ng test
 ng test --code-coverage
 ```
 
-### Code Generation
-```bash
-# Yeni component oluşturma
-
-```
-
 ## 🔐 API Entegrasyonu
 
 Bu frontend uygulaması, kütüphane yönetim sistemi backend API'si ile iletişim kurar:
