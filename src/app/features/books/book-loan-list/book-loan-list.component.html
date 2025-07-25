@@ -1,0 +1,111 @@
+<!-- Ödünç İşlemleri Listesi Sayfası -->
+<div class="loan-list-container">
+  
+  <!-- Sayfa Başlığı -->
+  <div class="header">
+    <h1>📋 Ödünç İşlemleri</h1>
+    <div class="header-actions">
+      <button (click)="goBack()" class="btn-secondary">
+        ← Kitap Listesine Dön
+      </button>
+    </div>
+  </div>
+
+  <!-- Yükleniyor Mesajı -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>Ödünç işlemleri yükleniyor...</p>
+  </div>
+
+  <!-- Hata Mesajı -->
+  <div *ngIf="errorMessage" class="error-message">
+    ❌ {{ errorMessage }}
+    <button (click)="refreshList()" class="retry-btn">🔄 Tekrar Dene</button>
+  </div>
+
+  <!-- Ödünç Listesi -->
+  <div *ngIf="!isLoading && !errorMessage" class="loans-section">
+    
+    <!-- Toplam Sayı -->
+    <div class="loans-count">
+      <p>Toplam <strong>{{ bookLoans.length }}</strong> ödünç işlemi bulundu</p>
+    </div>
+
+    <!-- Hiç Ödünç Yok -->
+    <div *ngIf="bookLoans.length === 0" class="no-loans">
+      <div class="no-loans-icon">📭</div>
+      <h3>Henüz ödünç işlemi yapılmamış</h3>
+      <p>Kullanıcılar kitap ödünç aldığında burada görünecektir.</p>
+    </div>
+
+    <!-- Ödünç Listesi Tablosu -->
+    <div *ngIf="bookLoans.length > 0" class="loans-table-container">
+      <table class="loans-table">
+        
+        <!-- Tablo Başlıkları -->
+        <thead>
+          <tr>
+            <th>Sıra</th>
+            <th>Kitap Adı</th>
+            <th>Kullanıcı</th>
+            <th>Ödünç Tarihi</th>
+            <th>Beklenen Teslim</th>
+            <th>Gerçek Teslim</th>
+            <th>Durum</th>
+          </tr>
+        </thead>
+        
+        <!-- Tablo İçeriği -->
+        <tbody>
+          <tr *ngFor="let loan of bookLoans; let i = index" 
+              [class.overdue-row]="isOverdue(loan.expectedReturnDate, loan.isReturned)"
+              [class.returned-row]="loan.isReturned">
+            
+            <!-- Sıra Numarası -->
+            <td class="row-number">{{ i + 1 }}</td>
+            
+            <!-- Kitap Adı -->
+            <td class="book-title">
+              <strong>{{ loan.bookTitle }}</strong>
+            </td>
+            
+            <!-- Kullanıcı Adı -->
+            <td class="user-name">
+              {{ loan.userName }}
+            </td>
+            
+            <!-- Ödünç Tarihi -->
+            <td class="loan-date">
+              {{ formatDate(loan.loanDate) }}
+            </td>
+            
+            <!-- Beklenen Teslim Tarihi -->
+            <td class="return-date">
+              {{ formatDate(loan.expectedReturnDate) }}
+            </td>
+            
+            <!-- Gerçek Teslim Tarihi -->
+            <td class="actual-return-date">
+              {{ loan.actualReturnDate ? formatDate(loan.actualReturnDate) : '-' }}
+            </td>
+            
+            <!-- Durum -->
+            <td class="status">
+              <span *ngIf="loan.isReturned" class="status-badge returned">
+              Teslim Edildi
+              </span>
+              <span *ngIf="!loan.isReturned && !isOverdue(loan.expectedReturnDate, loan.isReturned)" 
+                    class="status-badge active">
+              Ödünç Alınmış
+              </span>
+              <span *ngIf="!loan.isReturned && isOverdue(loan.expectedReturnDate, loan.isReturned)" 
+                    class="status-badge overdue">
+               Geç Teslim
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 

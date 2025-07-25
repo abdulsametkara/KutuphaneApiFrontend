@@ -21,6 +21,19 @@
       <!-- Search Options -->
       <div class="search-options">
 
+        <!-- Title Search -->
+        <div class="search-group">
+          <label class="search-label">
+            📖 Kitap Başlığı
+          </label>
+          <input 
+            type="text"
+            class="search-input"
+            [(ngModel)]="searchTitle"
+            name="searchTitle"
+            placeholder="Kitap başlığı girin..."
+            [disabled]="selectedAuthorId > 0 || selectedCategoryId > 0">
+        </div>
 
         <!-- Author Search -->
         <div class="search-group">
@@ -100,35 +113,60 @@
   <div *ngIf="books.length > 0" class="results-section">
     
     <!-- Results Header -->
-  <div *ngIf="!isLoading && !errorMessage && categories.length > 0" class="results-section">
     <div class="results-header">
-      <h3><i class="fas fa-list"></i> Arama Sonuçları ({{ categories.length }} sonuç)</h3>
+      <h3>📋 Arama Sonuçları ({{ books.length }} sonuç)</h3>
     </div>
 
-    <!-- Results Grid -->
-    <div class="results-grid">
-      <div *ngFor="let book of books; let i = index" class="result-card">
+    <!-- Books Grid (book-list style) -->
+    <div class="books-grid">
+      <div *ngFor="let book of books; let i = index" 
+           class="book-card clickable" 
+           (click)="openBookModal(book)">
         
         <!-- Book Number -->
         <div class="book-number">{{ i + 1 }}</div>
         
         <!-- Book Info -->
         <div class="book-info">
-          <h4 class="book-title">{{ book.title }}</h4>
-          <p class="book-description" *ngIf="book.description">
-            {{ book.description }}
-          </p>
-          <div class="book-details">
-            <span class="detail-item">
-              📄 {{ book.countofPage }} sayfa
-            </span>
-            <span class="detail-item">
-              🆔 Yazar ID: {{ book.authorId }}
-            </span>
-            <span class="detail-item">
-              🏷️ Kategori ID: {{ book.categoryId }}
+          
+          <!-- Book Image -->
+          <div class="book-image">
+            <img *ngIf="hasImage(book.fileKey); else noImage" 
+                 [src]="getImageUrl(book.fileKey)" 
+                 [alt]="book.title" 
+                 width="250" />
+            <ng-template #noImage>
+              <div class="no-image">
+                <span *ngIf="book.fileKey && !hasImage(book.fileKey)">⏳ Yükleniyor...</span>
+                <span *ngIf="!book.fileKey">📷 Resim Yok</span>
+              </div>
+            </ng-template>
+          </div>
+          
+          <h3 class="book-title">{{ book.title }}</h3>
+          
+          <!-- Stok bilgisi -->
+          <div class="book-stock-info">
+            <span class="stock-mini-badge" 
+                  [class.available]="book.availableCopies > 0"
+                  [class.unavailable]="book.availableCopies === 0">
+              📦 {{ book.availableCopies }}/{{ book.totalCopies }}
             </span>
           </div>
+        </div>
+    
+        <!-- Book Actions -->
+        <div class="book-actions" (click)="$event.stopPropagation()">
+          <button *ngIf="authService.canEdit()" 
+                  (click)="editBook(book.id)" 
+                  class="action-btn edit-btn">
+            ✏️ Düzenle
+          </button>
+          <button *ngIf="authService.canDelete()"
+                  (click)="deleteBook(book.id)" 
+                  class="action-btn delete-btn">
+            🗑️ Sil
+          </button>
         </div>
       </div>
     </div>
@@ -139,6 +177,137 @@
     <div class="no-results-icon">🔍</div>
     <h3>Arama yapın</h3>
     <p>Kitap aramak için yukarıdaki filtreleri kullanın.</p>
+  </div>
+
+  <!-- 🆕 BOOK DETAIL MODAL (book-list'ten kopyalandı) -->
+  <div *ngIf="showModal" 
+       class="modal-overlay" 
+       (click)="onBackdropClick($event)"
+       (keydown)="onKeyDown($event)"
+       tabindex="0">
+    
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h2>📚 Kitap Detayları</h2>
+        <button class="close-btn" (click)="closeBookModal()">
+          ❌
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body" *ngIf="selectedBook">
+        
+        <!-- Book Content Layout -->
+        <div class="book-content">
+          
+          <!-- Left Side: Book Image -->
+          <div class="book-image-section">
+                       <div class="modal-book-image">
+             <img *ngIf="hasImage(selectedBook.fileKey); else noModalImage" 
+                  [src]="getImageUrl(selectedBook.fileKey)" 
+                  [alt]="selectedBook.title" />
+             <ng-template #noModalImage>
+               <div class="no-modal-image">
+                 <span *ngIf="selectedBook.fileKey && !hasImage(selectedBook.fileKey)">⏳</span>
+                 <span *ngIf="!selectedBook.fileKey">📷</span>
+                 <span *ngIf="selectedBook.fileKey && !hasImage(selectedBook.fileKey)">Yükleniyor...</span>
+                 <span *ngIf="!selectedBook.fileKey">Resim Yok</span>
+               </div>
+             </ng-template>
+           </div>
+          </div>
+
+          <!-- Right Side: Book Details -->
+          <div class="book-details-section">
+            
+            <!-- Book Title -->
+            <h3 class="modal-book-title">
+              📖 {{ selectedBook.title }}
+            </h3>
+
+            <!-- Author Info -->
+            <div class="detail-row">
+              <span class="detail-icon">✍️</span>
+              <span class="detail-label">Yazar:</span>
+              <span class="detail-value">{{ getAuthorFullInfo() }}</span>
+            </div>
+
+            <!-- Category Info -->
+            <div class="detail-row">
+              <span class="detail-icon">🏷️</span>
+              <span class="detail-label">Kategori:</span>
+              <span class="detail-value">
+                {{ selectedCategory?.name || 'Kategori bulunamadı' }}
+              </span>
+            </div>
+
+            <!-- Page Count -->
+            <div class="detail-row">
+              <span class="detail-icon">📄</span>
+              <span class="detail-label">Sayfa Sayısı:</span>
+              <span class="detail-value">{{ selectedBook.countofPage }} sayfa</span>
+            </div>  
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description-section" *ngIf="selectedBook.description">
+          <h4>📝 Kitap Özeti:</h4>
+          <p class="book-description-full">{{ selectedBook.description }}</p>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        
+        <!-- Stok Bilgisi -->
+        <div class="stock-info">
+          <span class="stock-badge" 
+                [class.available]="getAvailableCopies(selectedBook?.id || 0) > 0"
+                [class.unavailable]="getAvailableCopies(selectedBook?.id || 0) === 0">
+            📦 {{ getAvailableCopies(selectedBook?.id || 0) }}/{{ getTotalCopies(selectedBook?.id || 0) }} Mevcut
+          </span>
+        </div>
+
+        <!-- Ödünç Al Butonu -->
+        <button 
+          *ngIf="!isBookBorrowed(selectedBook?.id || 0) && getAvailableCopies(selectedBook?.id || 0) > 0"
+          (click)="borrowBook(selectedBook!)" 
+          class="modal-btn borrow-btn"
+          [disabled]="isBorrowing">
+          <span *ngIf="!isBorrowing">📚 Ödünç Al</span>
+          <span *ngIf="isBorrowing">⏳ Ödünç Alınıyor...</span>
+        </button>
+
+        <!-- Teslim Et Bölümü -->
+        <div *ngIf="isBookBorrowed(selectedBook?.id || 0)" class="return-section">
+          <div class="loan-info">
+            <div class="return-date" 
+                 [class.overdue]="isOverdue(selectedBook?.id || 0)">
+              <span class="date-icon">📅</span>
+              <span class="date-label">Teslim Tarihi:</span>
+              <span class="date-value">{{ getExpectedReturnDate(selectedBook?.id || 0) }}</span>
+              <span *ngIf="isOverdue(selectedBook?.id || 0)" class="overdue-warning">⚠️ Geç!</span>
+            </div>
+          </div>
+          
+          <button 
+            (click)="returnBook(selectedBook?.id || 0)" 
+            class="modal-btn return-btn"
+            [class.overdue-btn]="isOverdue(selectedBook?.id || 0)">
+            📤 Kitabı Teslim Et
+          </button>
+        </div>
+
+        <!-- Stokta Yok Mesajı -->
+        <div *ngIf="!isBookBorrowed(selectedBook?.id || 0) && getAvailableCopies(selectedBook?.id || 0) === 0" class="out-of-stock">
+          ❌ Bu kitap şu anda mevcut değil
+        </div>  
+      </div>
+    </div>
   </div>
 
 </div>

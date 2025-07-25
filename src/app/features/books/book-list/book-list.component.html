@@ -4,6 +4,10 @@
   <div class="header">
     <h1>📚 Kitap Yönetimi</h1>
     <div class="header-actions">
+      <!-- 🆕 Ödünç İşlemleri Butonu - Sadece Admin -->
+      <button *ngIf="authService.canCreate()" (click)="goToLoanList()" class="btn-loans">
+        📋 Ödünç İşlemleri
+      </button>
       <button *ngIf="authService.canCreate()" (click)="addNewBook()" class="btn-primary">
         ➕ Yeni Kitap Ekle
       </button>
@@ -197,13 +201,28 @@
           <span *ngIf="isBorrowing">⏳ Ödünç Alınıyor...</span>
         </button>
 
-        <!-- 🆕 ZATEN ÖDÜNÇ ALINMIŞ MESAJI -->
-        <div *ngIf="isBookBorrowed(selectedBook?.id || 0)" class="already-borrowed">
-          ✅ Bu kitabı zaten ödünç almışsınız
+        <!-- 🆕 TESLİM ET BÖLÜMÜ -->
+        <div *ngIf="isBookBorrowed(selectedBook?.id || 0)" class="return-section">
+          <div class="loan-info">
+            <div class="return-date" 
+                 [class.overdue]="isOverdue(selectedBook?.id || 0)">
+              <span class="date-icon">📅</span>
+              <span class="date-label">Teslim Tarihi:</span>
+              <span class="date-value">{{ getExpectedReturnDate(selectedBook?.id || 0) }}</span>
+              <span *ngIf="isOverdue(selectedBook?.id || 0)" class="overdue-warning">⚠️ Geç!</span>
+            </div>
+          </div>
+          
+          <button 
+            (click)="returnBook(selectedBook?.id || 0)" 
+            class="modal-btn return-btn"
+            [class.overdue-btn]="isOverdue(selectedBook?.id || 0)">
+            📤 Kitabı Teslim Et
+          </button>
         </div>
 
         <!-- 🆕 STOKTİ MESAJI -->
-        <div *ngIf="getAvailableCopies(selectedBook?.id || 0) === 0" class="out-of-stock">
+        <div *ngIf="!isBookBorrowed(selectedBook?.id || 0) && getAvailableCopies(selectedBook?.id || 0) === 0" class="out-of-stock">
           ❌ Bu kitap şu anda mevcut değil
         </div>  
       </div>

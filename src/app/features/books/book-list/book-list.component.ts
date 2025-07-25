@@ -271,6 +271,69 @@ export class BookListComponent implements OnInit {
     return borrowed;
   }
 
+  // Kitabın ödünç alındığı loan bilgisini getir
+  getBookLoan(bookId: number): any {
+    if (!bookId || !this.userActiveLoans) return null;
+    return this.userActiveLoans.find(loan => loan.bookId === bookId && !loan.isReturned);
+  }
+
+  // Kitap teslim etme
+  returnBook(bookId: number): void {
+    const loan = this.getBookLoan(bookId);
+    if (!loan) {
+      alert('Ödünç alma kaydı bulunamadı.');
+      return;
+    }
+
+    if (confirm('Bu kitabı teslim etmek istediğinize emin misiniz?')) {
+      this.bookLoanService.returnBook(loan.id).subscribe({
+        next: (response) => {
+          console.log('Kitap teslim etme yanıtı:', response);
+          
+          // Backend IsSuccess kullanıyor
+          const isSuccess = (response as any).isSuccess || response.success;
+          if (isSuccess) {
+            alert('Kitap başarıyla teslim edildi! 📚✅');
+            
+            // UI'yi güncelle
+            this.loadBooks();
+            this.loadUserActiveLoans();
+            
+            // Modal'ı kapat
+            this.closeBookModal();
+            
+          } else {
+            const message = (response as any).message || response.message || 'Bilinmeyen hata';
+            alert('Hata: ' + message);
+          }
+        },
+        error: (error) => {
+          console.error('Kitap teslim edilirken hata:', error);
+          alert('Kitap teslim edilirken bir hata oluştu.');
+        }
+      });
+    }
+  }
+
+  // Teslim edilmesi gereken tarihi formatla
+  getExpectedReturnDate(bookId: number): string {
+    const loan = this.getBookLoan(bookId);
+    if (!loan || !loan.expectedReturnDate) return '';
+    
+    const date = new Date(loan.expectedReturnDate);
+    return date.toLocaleDateString('tr-TR');
+  }
+
+  // Kitabın geç teslim edilip edilmediğini kontrol et
+  isOverdue(bookId: number): boolean {
+    const loan = this.getBookLoan(bookId);
+    if (!loan || !loan.expectedReturnDate) return false;
+    
+    const today = new Date();
+    const expectedDate = new Date(loan.expectedReturnDate);
+    return today > expectedDate;
+  }
+
   onBackdropClick(event: Event): void {
     if (event.target === event.currentTarget) {
       this.closeBookModal();
@@ -315,6 +378,11 @@ export class BookListComponent implements OnInit {
 
   searchBooks(): void {
     this.router.navigate(['/books/search']);
+  }
+
+  // 🆕 Ödünç İşlemleri sayfasına git
+  goToLoanList(): void {
+    this.router.navigate(['/books/loans']);
   }
 
   goBack(): void {

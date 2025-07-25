@@ -1,0 +1,321 @@
+/* === BOOK LOAN LIST COMPONENT CSS === */
+
+/* Ana Container */
+.loan-list-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header - Sayfa Başlığı */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.header h1 {
+  color: white;
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Butonlar */
+.btn-primary, .btn-secondary {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.btn-primary { background: linear-gradient(45deg, #4CAF50, #45a049); }
+.btn-secondary { background: linear-gradient(45deg, #FF7043, #F4511E); }
+
+.btn-primary:hover { background: linear-gradient(45deg, #45a049, #388e3c); }
+.btn-secondary:hover { background: linear-gradient(45deg, #F4511E, #E64A19); }
+
+/* Loading & Error States */
+.loading, .error-message, .no-loans {
+  text-align: center;
+  color: white;
+  padding: 50px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.retry-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+.no-loans-icon { font-size: 80px; margin-bottom: 20px; }
+.no-loans h3 { font-size: 24px; margin: 20px 0; }
+
+/* Loans Section */
+.loans-section {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.loans-count {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Tablo Container */
+.loans-table-container {
+  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Tablo Stilleri */
+.loans-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.loans-table th {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFE082;
+  font-weight: 700;
+  padding: 15px 8px;
+  text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* Belirli sütunlar için özel hizalama */
+.loans-table th:nth-child(2), /* Kitap Adı */
+.loans-table th:nth-child(3) { /* Kullanıcı */
+  text-align: left;
+}
+
+.loans-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* Kitap ve kullanıcı hücrelerini sol hizala */
+.loans-table td:nth-child(2), /* Kitap Adı */
+.loans-table td:nth-child(3) { /* Kullanıcı */
+  text-align: left;
+}
+
+/* Kitap adı sütunu için ekstra sol padding */
+.loans-table td:nth-child(2) { /* Kitap Adı */
+  padding-left: 20px;
+}
+
+.loans-table th:nth-child(2) { /* Kitap Adı başlığı */
+  padding-left: 20px;
+}
+
+.loans-table tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Satır Tipleri */
+.returned-row {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.overdue-row {
+  background: rgba(244, 67, 54, 0.1);
+  animation: pulseOverdue 3s infinite;
+}
+
+@keyframes pulseOverdue {
+  0%, 100% { background: rgba(244, 67, 54, 0.1); }
+  50% { background: rgba(244, 67, 54, 0.2); }
+}
+
+/* Tablo Hücre Stilleri */
+.row-number {
+  font-weight: 700;
+  color: #E1BEE7;
+  text-align: center;
+  width: 60px;
+  min-width: 60px;
+}
+
+.book-title {
+  font-weight: 600;
+  color: #FFE082;
+  max-width: 200px;
+  min-width: 150px;
+  text-align: left;
+}
+
+.user-name {
+  color: #81C784;
+  font-weight: 500;
+  min-width: 100px;
+  text-align: left;
+}
+
+.loan-date, .return-date, .actual-return-date {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.actual-return-date {
+  color: #81C784; /* Yeşil ton - teslim edilmiş için */
+}
+
+/* Teslim edilmeyen kitaplar için gri renk */
+.actual-return-date:empty,
+.actual-return-date:contains("-") {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Durum Badge'leri */
+.status {
+  text-align: center;
+  min-width: 120px;
+  width: 120px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+.status-badge.returned {
+  background: linear-gradient(45deg, #4CAF50, #45a049);
+  color: white;
+}
+
+.status-badge.active {
+  background: linear-gradient(45deg, #2196F3, #1976D2);
+  color: white;
+}
+
+.status-badge.overdue {
+  background: linear-gradient(45deg, #FF5722, #D84315);
+  color: white;
+  animation: pulseOverdueBadge 2s infinite;
+}
+
+@keyframes pulseOverdueBadge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.notes {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+  max-width: 150px;
+  min-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Responsive - Mobil Uyumluluk */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .loans-section {
+    padding: 20px;
+  }
+  
+  .loans-table {
+    font-size: 12px;
+  }
+  
+  .loans-table th,
+  .loans-table td {
+    padding: 8px 6px;
+  }
+  
+  .book-title {
+    max-width: 120px;
+  }
+  
+  .notes {
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loan-list-container {
+    padding: 10px;
+  }
+  
+  .header h1 {
+    font-size: 20px;
+  }
+  
+  .loans-section {
+    padding: 15px;
+  }
+  
+  .loans-table th,
+  .loans-table td {
+    padding: 6px 4px;
+    font-size: 11px;
+  }
+} 
