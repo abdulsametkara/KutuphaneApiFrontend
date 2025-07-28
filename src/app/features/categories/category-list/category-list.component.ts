@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
+import Swal from 'sweetalert2';
 
 
 interface ApiResponse<T> {
@@ -52,25 +53,51 @@ export class CategoryList {
     });
   }
 
-  deleteCategory(category: Category): void {
-    if (confirm(`"${category.name}" kategorisini silmek istediğinize emin misiniz?`)) {     
+deleteCategory(category: Category): void {
+  if (!category || !category.id) return;
+
+  Swal.fire({
+    title: 'Emin misiniz?',
+    text: `"${category.name}" kategorisini silmek üzeresiniz.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Evet, sil!',
+    cancelButtonText: 'Vazgeç'
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.categoryService.deleteCategory(category.id).subscribe({
         next: (response: ApiResponse<any>) => {
           if (response && response.isSuccess) {
-
             this.categories = this.categories.filter(c => c.id !== category.id);
+
+            Swal.fire({
+              title: 'Silindi!',
+              text: `"${category.name}" kategorisi başarıyla silindi.`,
+              icon: 'success'
+            });
           } else {
             this.errorMessage = response.message;
-            alert(response.message);
+            Swal.fire({
+              title: 'Hata!',
+              text: response.message || 'Kategori silinemedi.',
+              icon: 'error'
+            });
           }
         },
         error: (error: any) => {
           this.errorMessage = error.message;
-          alert('Kategori silinirken bir hata oluştu');
+          Swal.fire({
+            title: 'Sunucu Hatası!',
+            text: 'Kategori silinirken bir hata oluştu.',
+            icon: 'error'
+          });
         }
       });
     }
-  }
+  });
+}
 
   viewCategoryDetails(category: Category): void {
     this.router.navigate(['/categories', category.id]);

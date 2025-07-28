@@ -11,6 +11,7 @@ import { UploadService } from '../../../core/services/upload.service';
 import { BookLoanService } from '../../../core/services/book-loan.service';
 import { Book } from '../../../core/models/book.model';
 import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 
 interface Author {
   id: number;
@@ -95,17 +96,29 @@ export class BookListComponent implements OnInit {
   borrowBook(book: Book): void {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser || !currentUser.id) {
-      alert('Lütfen önce giriş yapın.');
+      Swal.fire({
+          title: "Tebrikler!",
+          text: "Kitap başarıyla ödünç alındı!",
+          icon: "success"
+        });
       return;
     }
 
     if (book.availableCopies <= 0) {
-      alert('Bu kitap şu anda mevcut değil.');
+      Swal.fire({
+          title: "Hata!",
+          text: "Bu kitap şu anda mevcut değil.",
+          icon: "error"
+        });
       return;
     }
 
     if (this.isBookBorrowed(book.id)) {
-      alert('Bu kitabı zaten ödünç almışsınız.');
+      Swal.fire({
+          title: "Hata!",
+          text: "Bu kitabı zaten ödünç almışsınız.",
+          icon: "error"
+        });
       return;
     }
 
@@ -125,7 +138,12 @@ export class BookListComponent implements OnInit {
         // Backend IsSuccess kullanıyor, frontend success bekliyor
         const isSuccess = (response as any).isSuccess || response.success;
         if (isSuccess) {
-          alert('Kitap başarıyla ödünç alındı! 📚');
+          
+          Swal.fire({
+          title: "Tebrikler!",
+          text: "Kitap başarıyla ödünç alındı!",
+          icon: "success"
+        });
           
           // UI'yi güncelle
           this.loadBooks();
@@ -136,14 +154,22 @@ export class BookListComponent implements OnInit {
           
         } else {
           const message = (response as any).message || response.message || 'Bilinmeyen hata';
-          alert('Hata: ' + message);
+          Swal.fire({
+            title: "Hata!",
+            text: message,
+            icon: "error"
+          });
         }
         this.isBorrowing = false;
         
       },
       error: (error) => {
         console.error('Kitap ödünç alınırken hata:', error);
-        alert('Kitap ödünç alınırken bir hata oluştu.');
+        Swal.fire({
+          title: "Hata!",
+          text: "Kitap ödünç alınırken bir hata oluştu.",
+          icon: "error"
+        });
         this.isBorrowing = false;
       }
     });
@@ -281,11 +307,15 @@ export class BookListComponent implements OnInit {
   returnBook(bookId: number): void {
     const loan = this.getBookLoan(bookId);
     if (!loan) {
-      alert('Ödünç alma kaydı bulunamadı.');
+      Swal.fire({
+        title: "Hata!",
+        text: "Ödünç alma kaydı bulunamadı.",
+        icon: "error"
+      });
       return;
     }
 
-    if (confirm('Bu kitabı teslim etmek istediğinize emin misiniz?')) {
+    if (!loan.isReturned) {
       this.bookLoanService.returnBook(loan.id).subscribe({
         next: (response) => {
           console.log('Kitap teslim etme yanıtı:', response);
@@ -293,8 +323,12 @@ export class BookListComponent implements OnInit {
           // Backend IsSuccess kullanıyor
           const isSuccess = (response as any).isSuccess || response.success;
           if (isSuccess) {
-            alert('Kitap başarıyla teslim edildi! 📚✅');
-            
+            Swal.fire({
+              title: "Tebrikler!",
+              text: "Kitap başarıyla teslim edildi!",
+              icon: "success"
+            });
+
             // UI'yi güncelle
             this.loadBooks();
             this.loadUserActiveLoans();
@@ -304,12 +338,20 @@ export class BookListComponent implements OnInit {
             
           } else {
             const message = (response as any).message || response.message || 'Bilinmeyen hata';
-            alert('Hata: ' + message);
+            Swal.fire({
+              title: "Hata!",
+              text: message,
+              icon: "error"
+            });
           }
         },
         error: (error) => {
           console.error('Kitap teslim edilirken hata:', error);
-          alert('Kitap teslim edilirken bir hata oluştu.');
+          Swal.fire({
+            title: "Hata!",
+            text: "Kitap teslim edilirken bir hata oluştu.",
+            icon: "error"
+          });
         }
       });
     }
@@ -346,8 +388,18 @@ export class BookListComponent implements OnInit {
     }
   }
 
-  deleteBook(id: number): void {
-    if (confirm('Bu kitabı silmek istediğinize emin misiniz?')) {
+deleteBook(id: number): void {
+  Swal.fire({
+    title: 'Emin misiniz?',
+    text: 'Bu kitabı silmek istediğinize emin misiniz?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sil',
+    cancelButtonText: 'Vazgeç'
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.bookService.deleteBook(id).subscribe({
         next: (response) => {
           if (response && response.isSuccess) {
@@ -355,18 +407,19 @@ export class BookListComponent implements OnInit {
             if (this.selectedBook?.id === id) {
               this.closeBookModal();
             }
+            Swal.fire('Silindi!', 'Kitap başarıyla silindi.', 'success');
           } else {
-            alert(response?.message || 'Kitap silinirken hata oluştu');
+            Swal.fire('Hata', response?.message || 'Kitap silinirken hata oluştu', 'error');
           }
         },
         error: (error) => {
           console.error('Kitap silinirken hata:', error);
-          alert('Kitap silinirken hata oluştu');
+          Swal.fire('Hata', 'Kitap silinirken sunucu hatası oluştu.', 'error');
         }
       });
     }
-  }
-
+  });
+}
   editBook(id: number): void {
     this.router.navigate(['/books/update', id]);
     this.closeBookModal();

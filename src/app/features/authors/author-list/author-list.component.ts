@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthorService } from '../../../core/services/author.service';
 import { Author } from '../../../core/models/author.model';
+import Swal from 'sweetalert2';
 
 interface ApiResponse<T> {
   isSuccess: boolean;
@@ -31,26 +32,56 @@ export class AuthorListComponent implements OnInit {
     this.loadAuthors();
   }
 
-  deleteAuthor(author: Author): void {
-    if (confirm(`"${author.name} ${author.surname}" yazarını silmek istediğinize emin misiniz?`)) {
-      
-      this.authorService.deleteAuthor(author.id).subscribe({
-        next: (response: any) => {
-          
-          if (response && (response.isSuccess === true || response.isSuccess === 'true' || response.message?.includes('başarıyla'))) {
-            this.authors = this.authors.filter(a => a.id !== author.id);
-            
 
-          } else {
-            alert(response.message);
+
+  deleteAuthor(author: Author): void {
+  if (author && author.id) {
+    Swal.fire({
+      title: 'Emin misiniz?',
+      text: `"${author.name} ${author.surname}" adlı yazarı silmek üzeresiniz.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sil',
+      cancelButtonText: 'Vazgeç'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authorService.deleteAuthor(author.id).subscribe({
+          next: (response: any) => {
+            if (
+              response &&
+              (response.isSuccess === true || response.isSuccess === 'true' || response.message?.includes('başarıyla'))
+            ) {
+              this.authors = this.authors.filter(a => a.id !== author.id);
+
+              Swal.fire({
+                title: 'Silindi!',
+                text: `"${author.name} ${author.surname}" adlı yazar başarıyla silindi.`,
+                icon: 'success'
+              });
+
+            } else {
+              Swal.fire({
+                title: 'Hata!',
+                text: response.message || 'Yazar silinirken hata oluştu.',
+                icon: 'error'
+              });
+            }
+          },
+          error: () => {
+            Swal.fire({
+              title: 'Sunucu Hatası!',
+              text: 'Yazar silinirken bir hata oluştu.',
+              icon: 'error'
+            });
           }
-        },
-        error: (error: any) => {
-          alert('Yazar silinirken bir hata oluştu');
-        }
-      });
-    }
+        });
+      }
+    });
   }
+}
+
 
   loadAuthors(): void {
     this.isLoading = true;
