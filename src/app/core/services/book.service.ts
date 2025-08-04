@@ -3,7 +3,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Book, BookCreateDto, BookUpdateDto } from '../models/book.model';
 
@@ -68,5 +69,38 @@ export class BookService {
             'Authorization': `Bearer ${token}`
         });
         return this.http.get(`${this.apiUrl}/Book/GetBooksByAuthorId?authorId=${authorId}`, { headers });
+    }
+
+    getBookDescriptionFromRedis(bookId: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+    });
+    return this.http.get(`${this.apiUrl}/Book/${bookId}/description`, { headers }).pipe(
+        tap(response => {
+            console.log('Redis Description Response:', response);
+         }),
+    catchError(error => {
+        console.error('Redis Description Error:', error);
+        return throwError(() => error);
+        })
+    );
+    }
+
+    clearBookCache(bookId: number): Observable<any> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.delete(`${this.apiUrl}/books/${bookId}/cache`, { headers });
+    }
+
+
+    checkBookCacheExists(bookId: number): Observable<any> {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+        return this.http.get(`${this.apiUrl}/books/${bookId}/cache/exists`, { headers });
     }
 }

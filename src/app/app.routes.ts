@@ -81,6 +81,6 @@ export const routes: Routes = [
     path: 'categories/update/:id',
     loadComponent: () => import('./features/categories/category-update/category-update.component').then(c => c.CategoryUpdateComponent),
     canActivate: [AdminGuard]
-  },
+  }
 
 ];

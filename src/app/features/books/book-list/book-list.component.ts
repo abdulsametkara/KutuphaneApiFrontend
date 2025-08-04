@@ -43,6 +43,9 @@ export class BookListComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
 
+  isLoadingDescription = false;
+  redisDescription: string = '';
+
   // 🆕 POPUP STATE VARIABLES
   showModal = false;
   selectedBook: Book | null = null;
@@ -237,7 +240,8 @@ export class BookListComponent implements OnInit {
     this.selectedAuthor = this.authors.find(a => a.id === book.authorId) || null;
     this.selectedCategory = this.categories.find(c => c.id === book.categoryId) || null;
     this.showModal = true;
-    
+    this.loadBookDescriptionFromRedis(book.id);
+
     document.body.style.overflow = 'hidden';
     
     console.log('Modal açıldı:', {
@@ -249,12 +253,46 @@ export class BookListComponent implements OnInit {
     });
   }
 
+  loadBookDescriptionFromRedis(bookId: number): void {
+    this.isLoadingDescription = true;
+    this.redisDescription = '';
+
+    console.log(`🔄 Redis'ten kitap ${bookId} açıklaması çekiliyor...`);
+
+    this.bookService.getBookDescriptionFromRedis(bookId).subscribe({
+      next: (response) => {
+        console.log('📥 Redis Response:', response);
+        
+        if (response.isSuccess) {
+          this.redisDescription = response.data || 'Açıklama bulunamadı';
+          
+          if (response.message?.includes('cache')) {
+            console.log('CACHE HIT: Açıklama Redis\'ten geldi! (Süper hızlı)');
+          } else if (response.message?.includes('DB')) {
+            console.log('CACHE MISS: Açıklama DB\'den geldi ve cache\'lendi');
+          }
+        } else {
+          this.redisDescription = response.message || 'Açıklama bulunamadı';
+          console.error('Redis Error:', response.message);
+        }
+        
+        this.isLoadingDescription = false;
+      },
+      error: (error) => {
+        console.error('Redis API Error:', error);
+        this.redisDescription = this.selectedBook?.description || 'Açıklama yüklenemedi';
+        this.isLoadingDescription = false;
+      }
+    });
+  }
+
   closeBookModal(): void {
     this.showModal = false;
     this.selectedBook = null;
     this.selectedAuthor = null;
     this.selectedCategory = null;
-    
+    this.isLoadingDescription = false;
+    this.redisDescription = '';
     document.body.style.overflow = 'auto';
   }
 
@@ -420,6 +458,7 @@ deleteBook(id: number): void {
     }
   });
 }
+
   editBook(id: number): void {
     this.router.navigate(['/books/update', id]);
     this.closeBookModal();
